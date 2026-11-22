@@ -2,7 +2,7 @@
 
 스크롤로 시간 축을 이동하며 백엔드 사건을 설명하는 **인터랙티브 웹 에세이**. 영상이 아니다.
 
-프로젝트 배경은 `README.md`. 이 문서는 **작업 규칙**만 담는다.
+프로젝트 배경은 `README.md`. 이 문서는 **작업 규칙**과 디렉터리 구조만 담는다.
 
 이 저장소에는 결과물이 둘 있다.
 
@@ -15,9 +15,32 @@
 
 ---
 
-## 스택
+## 디렉터리와 새 에피소드
 
-익숙한 것(React·Tailwind)에 **모션 하나(GSAP)만** 더한다. 배울 게 하나여야 한다.
+에피소드 이름(`connection-pool`)이 디렉터리 이름이다. 소재 원안 `SCENARIOS.md`만 번호(§n)로 찾는다.
+
+| 위치 | 역할 |
+|---|---|
+| `SCENARIOS.md` | 소재 후보와 장면 3개·하이라이트 원안. 에피소드 1 = §1 "커넥션 풀 고갈" |
+| `<이름>/index.html` | 페이지 진입점. `vite.config.ts`의 MPA `input`에 등록 |
+| `src/<이름>/` | 코드. `connection-pool`은 `sim.ts`(시뮬레이션), `Scrolly.tsx`(GSAP·SVG), `Essay.tsx`(본문), `main.tsx` |
+| `art/<이름>/` | 배경 후보, `gen-bg.sh`, 이미지 옆 `.json`(생성 프롬프트), `compare/`(후보를 실제 화면에 얹은 캡처) |
+| `index.html` | 루트. 지금은 `/connection-pool/`로 redirect만 한다 |
+
+새 에피소드를 추가할 때, 이 순서로 한다:
+
+1. `SCENARIOS.md`에서 소재를 고른다. 새 소재면 먼저 거기에 올린다 ("모션이 없으면 설명이 안 되는가"를 통과한 것만).
+2. `<이름>/index.html`, `src/<이름>/`, `art/<이름>/`를 만들고 `vite.config.ts`의 `input`에 한 줄 더한다. 이름은 소문자 kebab-case.
+3. `connection-pool`에서 **복사해 시작한다.** 공통 모듈로 뽑는 건 실제 중복이 확인된 뒤다 (범용 장면 엔진 금지).
+4. 배경은 `gen-bg.sh`와 같은 방식으로 스크립트로 생성하고 프롬프트를 이미지 옆에 남긴다.
+5. 루트 `index.html`, 에피소드 목록, "다음 편" 표시는 **2회차가 실제로 공개될 때** 손댄다 (범위 밖 표 참조).
+6. 작업 구간이 끝나면 기록 단계를 넣는다 (「기록 규율」).
+
+용어 대시보드는 `terms.html` → `src/terms/`, 계획은 `docs/terms/`.
+
+---
+
+## 스택
 
 ### 1회차 확정
 
@@ -27,16 +50,14 @@
 | 빌드 | **Vite** | 기본값. Next.js 불필요 — 서버가 없다 |
 | 스타일 | **Tailwind** | 이미 익숙함 |
 | 모션 | **GSAP + ScrollTrigger** | 스크럽·핀의 사실상 표준 |
-| 타입 | **TypeScript** | 선택이지만 권장. 이 프로젝트는 **상태 일관성이 핵심**이라 장면 상태를 타입으로 묶어두면 연속성 버그가 줄어든다 |
+| 타입 | **TypeScript** | 이 프로젝트는 **상태 일관성이 핵심**이라 장면 상태를 타입으로 묶어두면 연속성 버그가 줄어든다 |
 | 배포 | **Vercel / Cloudflare Pages** | 정적이라 아무거나. 둘 다 무료 |
 
 > GSAP은 2024년 Webflow 인수 후 **기존 유료 플러그인까지 전부 무료**다. SplitText·MorphSVG·DrawSVG 등 포함.
 
-### 렌더링 레이어 — 실제로 결정해야 할 것
+### 렌더링 레이어 — SVG로 확정
 
-입자와 다이어그램을 **뭘로 그릴 것인가.** 아직 안 정했다.
-
-**기본값은 SVG다.** 입자를 수십 개 수준으로 제한하면 SVG로 충분하고, DOM이라서 **스크린리더·키보드·개발자 도구가 전부 작동**한다. 완성 기준의 **사용성** 항목이 여기에 걸려 있다.
+입자와 다이어그램은 **SVG로 그린다** (`Scrolly.tsx`가 이미 그렇다). 입자를 수십 개 수준으로 제한하면 SVG로 충분하고, DOM이라서 **스크린리더·키보드·개발자 도구가 전부 작동**한다. 완성 기준의 **사용성** 항목이 여기에 걸려 있다.
 
 **Canvas로 가지 마라** — 입자가 실제로 성능 병목이 되는 걸 측정한 다음에만. Canvas는 빠른 대신 접근성이 0이라 텍스트 대체를 따로 만들어야 하고, 그 비용이 성능 이득보다 크다. PixiJS·WebGL은 더더욱.
 
@@ -65,7 +86,6 @@ ScrollTrigger { markers: true }  →  핀 경계 확인
 | 후보 | 들어오는 조건 |
 |---|---|
 | **Lenis** (관성 스크롤) | 1회차 기능이 전부 끝난 뒤. 체감은 크지만 `prefers-reduced-motion`·모바일과 충돌 지점이 있어 마지막에 붙인다 |
-| **Motion** (구 Framer Motion) | 스크롤과 무관한 컴포넌트 단위 인터랙션이 실제로 필요해졌을 때. GSAP과 역할이 겹치는 동안은 불필요 |
 | **Three.js / R3F** | 2D로 설명이 안 되는 소재를 만났을 때 |
 | **MDX** | 에피소드가 **3편 이상** 돼서 콘텐츠와 코드 분리가 실제로 아플 때 |
 | **HyperFrames** | 영상 파생물을 만들 때 (2~3회차, 아래 영상 도입 조건 참조) |
@@ -225,7 +245,7 @@ ScrollTrigger { markers: true }  →  핀 경계 확인
 UI 섹션 카드의 데모는 **shadcn/ui 컴포넌트를 그대로 쓴다.** 직접 다시 만들지 않는다. 실무에서 쓰는 이름(Sheet, Alert Dialog, Hover Card 등)을 같이 익히는 것도 목적이다.
 
 - 설치는 CLI로 한다: `pnpm dlx shadcn@latest add <name>`. `components.json`의 aliases는 `src/terms/` 아래를 가리키게 한다
-- 허용하는 의존성은 **`shadcn add`가 그 컴포넌트를 위해 설치하는 것까지**다. 예: primitive 라이브러리(기본 `@base-ui/react`), `lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, Carousel의 `embla-carousel-react`. 그 밖의 라이브러리는 대시보드에서도 조건부 표 규칙을 따른다
+- 허용하는 의존성은 **`shadcn add`가 그 컴포넌트를 위해 설치하는 것까지**다. 예: primitive 라이브러리(`@base-ui/react`, `@shadcn/react`), `lucide-react`, `class-variance-authority`, `cn`, Carousel의 `embla-carousel-react`, Chart의 `recharts`. 그 밖의 라이브러리는 대시보드에서도 조건부 표 규칙을 따른다
 - **Motion·Style 섹션의 데모는 GSAP·CSS로 직접 만든다.** shadcn 컴포넌트에 원래 들어 있는 CSS transition은 그대로 둔다. Motion(구 Framer Motion)이나 confetti 라이브러리는 여전히 금지다
 - **에세이 코드(`src/connection-pool/`)는 shadcn 컴포넌트를 import하지 않는다.** 두 결과물이 서로의 규칙을 오염시키지 않게 한다
 - 자기 전용 shadcn registry(`registry.json` + `shadcn build`)는 대시보드 컴포넌트를 **다른 프로젝트에서 실제로 다시 쓰게 될 때** 만든다. 그 전에는 만들지 않는다
