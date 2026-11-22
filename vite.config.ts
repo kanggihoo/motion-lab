@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
@@ -6,10 +7,14 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   appType: 'mpa', // dev에서도 SPA fallback 없이 배포와 같게 404
+  resolve: {
+    alias: { '@terms': fileURLToPath(new URL('./src/terms', import.meta.url)) },
+  },
   build: {
     rolldownOptions: {
       input: {
         main: 'index.html',
+        terms: 'terms.html',
         'connection-pool': 'connection-pool/index.html',
       },
     },

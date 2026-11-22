@@ -1,4 +1,5 @@
 {
+  "compilerOptions": { "paths": { "@terms/*": ["./src/terms/*"] } },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
