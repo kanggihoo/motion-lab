@@ -1,4 +1,6 @@
-# motion-essay
+# motion-lab
+
+웹 모션·UI 학습 저장소. 결과물은 둘이다: 인터랙티브 웹 에세이(`src/connection-pool/`)와 용어 대시보드(`docs/terms/`, `src/terms/`).
 
 **백엔드 내부 동작과 그것이 실패한 실제 사건을, 스크롤로 시간 축을 이동하며 설명하는 인터랙티브 웹 에세이.**
 
