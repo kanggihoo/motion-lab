@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+/* --read: 본문 카드가 붙는 높이. Scrolly.tsx가 이 선을 스크롤 → 시각 매핑의 기준선으로 읽는다.
+   모바일: 다이어그램(viewBox 520×484, 높이 ≈ 폭 × 0.93)이 위를 차지하므로 그 바로 아래. */
+:root {
+  --diagram-h: min(50svh, 93vw);
+  --read: calc(var(--diagram-h) + 1rem);
+  color-scheme: dark;
+}
+
+@media (width >= 48rem) {
+  :root {
+    --read: 30vh;
+  }
+}
+
+body {
+  @apply bg-zinc-950 text-zinc-100 antialiased;
+}

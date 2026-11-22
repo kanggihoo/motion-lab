@@ -1,0 +1,13 @@
+{
+  "prompt": "An empty underground concourse, rows of bare concrete pillars receding into haze. Photographic, 35 mm film look: matte, soft focus, low contrast, fine grain, very dark overall. Wide symmetrical view at eye level; the centre of the frame is open, dark and hazy, with the architecture kept to the left and right edges. Light: calm, even and neutral, a soft glow far in the distance. Palette: cool teal and blue-green, desaturated. No text, signage, logos, people, screens or equipment. Landscape 16:9.",
+  "sent_text": "이미지를 생성해줘: An empty underground concourse, rows of bare concrete pillars receding into haze. Photographic, 35 mm film look: matte, soft focus, low contrast, fine grain, very dark overall. Wide symmetrical view at eye level; the centre of the frame is open, dark and hazy, with the architecture kept to the left and right edges. Light: calm, even and neutral, a soft glow far in the distance. Palette: cool teal and blue-green, desaturated. No text, signage, logos, people, screens or equipment. Landscape 16:9.",
+  "backend": "chatgpt",
+  "conversation_url": "https://chatgpt.com/c/6afff3ad-65a0-83e8-9c87-97e23ecd069b",
+  "conversation_deleted": true,
+  "created": "2026-11-20T16:16:43+09:00",
+  "elapsed_s": 56,
+  "width": 1672,
+  "height": 941,
+  "bytes": 2001585,
+  "saved_via": "fetch"
+}
