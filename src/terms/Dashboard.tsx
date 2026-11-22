@@ -123,7 +123,7 @@ export function Dashboard() {
     <ReducedMotionContext value={reduced}>
       <TooltipProvider>
         <header className="terms-header border-b border-indigo-200">
-          <div className="mx-auto flex max-w-[90rem] flex-wrap items-center gap-x-6 gap-y-3 px-4 py-4 sm:px-6 lg:py-5">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-4 py-4 sm:px-6 lg:py-5">
             <Sheet open={menuOpen} onOpenChange={setMenuOpen} onOpenChangeComplete={(open) => {
               if (open || !menuNavigating.current) return
               requestAnimationFrame(() => {
@@ -155,7 +155,7 @@ export function Dashboard() {
               <span>Reduced Motion 미리보기{osReduce && <span className="ml-1 text-slate-600">· OS 설정</span>}</span>
             </label>
           </div>
-          <nav aria-label="용어 섹션" className="mx-auto flex max-w-[90rem] flex-wrap gap-1 border-t border-indigo-100 px-4 py-2 sm:px-6">
+          <nav aria-label="용어 섹션" className="flex flex-wrap gap-1 border-t border-indigo-100 px-4 py-2 sm:px-6">
             {sectionOptions.map(({ id, name, firstCategory }) => firstCategory ?
               <a key={id} href={termHash(id, firstCategory)} aria-current={current.section.id === id ? 'page' : undefined}
                 onClick={(event) => navigate(event)} className="terms-section-link rounded-md px-3 py-1.5 text-sm font-semibold">{name}</a> :
@@ -163,7 +163,7 @@ export function Dashboard() {
           </nav>
         </header>
 
-        <div className="mx-auto grid max-w-[90rem] lg:grid-cols-[15rem_minmax(0,1fr)]">
+        <div className="grid lg:grid-cols-[15rem_minmax(0,1fr)]">
           <aside className="sticky top-0 hidden max-h-dvh self-start overflow-y-auto overscroll-contain border-r bg-white p-4 lg:block">
             <TermNavigation key={`${current.section.id}/${current.category.id}`} section={current.section} activeCategory={current.category.id} activeHash={current.hash} onNavigate={(event) => navigate(event)} />
           </aside>

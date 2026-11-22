@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "check": "node scripts/check-sim.ts"
+    "check": "node scripts/check-sim.ts && node scripts/check-contrast.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
