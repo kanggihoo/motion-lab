@@ -17,10 +17,11 @@
 | UI | [ui.md](ui.md) | 어떤 화면과 상태를 만드는가 | 91 |
 | Motion | [motion.md](motion.md) | 무엇이 언제 어떻게 움직이는가 | 33 |
 | Style | [style.md](style.md) | 화면이 어떤 시각 규칙을 따르는가 | 5 |
-| Camera *(나중)* | — | 구도·앵글·카메라 무브 | — |
-| Edit *(나중)* | — | 컷·디졸브·와이프 등 영상 편집 전환 | — |
+| Camera | [camera.md](camera.md) | 촬영할 때 무엇을 어떻게 담는가(무브·앵글·렌즈) | 26 |
+| Edit | [edit.md](edit.md) | 숏을 어떻게 잇고 시간의 흐름을 어떻게 바꾸는가 | 20 |
+| Look | [look.md](look.md) | 완성 화면의 색·빛·질감 | 7 |
 
-합계 129장. 출발점은 영상 2편의 용어 48개(UI 24 + Motion 24)다.
+합계 182장. 출발점은 영상 3편의 용어 98개(1탄 UI 24 + 2탄 Motion 24 + 3탄 영상 기법 50)다.
 
 **섹션을 새로 붙이는 방법**: 파일 하나(`camera.md`)를 만들고 이 표에 한 줄을 추가한다. 다른 섹션과 개념이 겹치면 카드의 "관계" 줄에 적는다(아래 연결 메모 참고).
 
@@ -57,7 +58,7 @@
 1. **포함 기준: 이름을 알면 요청이나 구현이 달라지는가.** 개수 상한은 없다.
    - 통과 예: "카드를 Masonry로" vs "카드를 Grid로" → 결과 배치가 다르다
    - 탈락 예: Rotate → "90° 회전"은 이름 없이도 같은 요청이다
-2. **출처 필수.** 영상 용어는 타임스탬프를, 영상 밖에서 추가한 용어는 원문 링크(MDN, W3C, WAI-ARIA APG, 디자인 시스템 문서)를 단다. 출처를 달 수 없는 용어는 넣지 않는다. 출처는 이 계획 문서에만 두고 대시보드 화면에는 표시하지 않는다.
+2. **출처 필수.** 영상 용어는 타임스탬프를, 영상 밖에서 추가한 용어는 원문 링크(웹: MDN, W3C, WAI-ARIA APG, 디자인 시스템 문서 / 영상: ASC 자료, Adobe·Blackmagic·Apple 공식 매뉴얼, 영화학 교재 *Film Art*)를 단다. 출처를 달 수 없는 용어는 넣지 않는다. 출처는 이 계획 문서에만 두고 대시보드 화면에는 표시하지 않는다.
 3. **Reduced Motion은 모든 데모에 적용한다.** `prefers-reduced-motion: reduce`이면 비필수 움직임을 멈추고, 정적인 전/후 상태로 같은 내용을 보여 준다. "재생" 버튼만 두는 것으로는 부족하다(`AGENTS.md` 접근성 항목).
 4. **데모는 보는 사람이 시작한다.** 자동 반복 재생 대신 hover·클릭·스크롤·"다시 재생" 버튼으로 시작한다. 카드 여러 장이 한 화면에서 동시에 움직이면 무엇을 봐야 할지 알 수 없다.
 5. **데모는 키보드로도 조작할 수 있어야 한다.** hover로 시작하는 데모는 focus로도 시작되게 한다.
@@ -85,7 +86,9 @@
 | Orchestration | Timeline 카드로 흡수 | 순서와 겹침은 Timeline 데모로 보여 줄 수 있다 |
 | Rotate | 제외 | "90° 회전"은 이름 없이도 같은 요청이다. 화살표 회전은 Accordion, 계속 도는 회전은 Loop 카드의 사례로 남긴다 |
 | Responsive Layout, Card Layout, Toast / Snackbar, Pagination / Infinite Scroll, Hover Effect | 제외 (2026-11-22) | 이미 아는 용어. 학습 목적의 대시보드라 카드로 만들 필요가 없다 |
-| Gradient(Mesh), Grain/Noise | 보류 | 근거 출처가 약하고, Style은 규칙으로 고정할 수 있는 것부터 둔다 |
+| Gradient(Mesh), Grain/Noise | 보류 | 근거 출처가 약하고, Style은 규칙으로 고정할 수 있는 것부터 둔다. 영상 룩으로서의 Film Grain은 Look 섹션에 있다 |
+| Reverse (3탄) | 카드 없음. 검색하면 Motion · Timeline(`tl.reverse()`)으로 안내 | Rotate와 같은 기준("거꾸로 재생"은 이름 없이도 같은 요청). `Timeline` 카드에 이미 `tl.reverse()`가 들어 있다 |
+| Zoom In, Slow Motion (3탄) | 제외 (2026-11-23) | 이미 아는 용어. 단 Dolly In·Crash Zoom·Dolly Zoom·Speed Ramp·Bullet Time 등의 비교 기준이라 관계 줄과 검색어로 연결한다 |
 
 **후속 후보**(기준은 통과하지만 1차 목록 밖): Mask / Clip Reveal(가려졌다 드러남, Split Text와 다른 방식), Shake(입력 오류 시 좌우 흔들림).
 
@@ -109,17 +112,40 @@
 
 산식: 48 − 1(Smooth Transition) + 1(Pin 분리) + 2(Dropdown 분리) + 14(신규) = 64 → 이미 아는 5장 제외 = **59**
 
-## Camera·Edit 섹션 연결 메모
+## 영상 3탄 50개의 처분
 
-나중에 영상 섹션을 붙일 때 겹치거나 헷갈리는 지점.
+**유지한 것은 `camera.md`·`edit.md`·`look.md`에 그대로 있다.** 아래는 바뀐 것만 정리했다.
 
-- **공통 개념**: Easing, Keyframe, Timeline, Motion Path. 영상 편집 도구(키프레임 보간, 그래프 에디터)에서도 같은 이름과 같은 뜻으로 쓴다. 카드를 새로 만들지 말고 Motion 카드를 참조한다.
-- **같은 이름, 다른 대상**: Wipe. 웹에서는 페이지를 덮는 전환이고, 편집에서는 컷 사이의 전환이다. 두 섹션에 각각 두고 서로 비교한다.
-- **비유로만 쓸 것** (같은 것으로 적지 않는다):
-  - Parallax ↔ dolly: 깊이감은 비슷하지만, Parallax는 층마다 다른 속도로 움직이고 dolly는 카메라가 실제로 이동한다
-  - Pin ↔ locked-off shot: 스크롤 위치를 고정하는 것과 카메라 구도를 고정하는 것은 다르다
-  - Scale ↔ push-in / zoom: 요소가 커지는 것과 카메라가 다가가는 것은 다르다
-  - Shared Element ↔ match cut: Shared Element는 *같은 요소*가 이어지고, match cut은 *다른 요소*가 형태만 닮는다
+| 원제 | 처분 | 간 곳 |
+|---|---|---|
+| High Angle, Low Angle | 병합 | Camera · Angle & Framing · High / Low Angle (두 이름 검색어) |
+| Extreme Close-up | 표제 넓힘 | Camera · Angle & Framing · Shot Size (ECU는 변형·검색어) |
+| Reverse | 독립 카드 제거 | 검색어로 Motion · Timeline(`tl.reverse()`)에 연결 |
+| Zoom In, Slow Motion | 제외 | 이미 앎 (비교 기준이라 관계 줄·검색어로 연결) |
+| One Take | 표제 변경 | Camera · Movement · Long Take (One Take·Oner 검색어) |
+| God Rays | 표제 변경 | Look · Color & Light · Volumetric Light (God Rays·Light Shafts 검색어) |
+| Fade Out | 표제 변경 | Edit · Transition · Fade to Black (Fade In / Out 검색어, Motion · Fade와 다른 대상) |
+| Dolly In | 표제 넓힘 | Camera · Movement · Dolly In / Out |
+| Iris, Tilt-shift | 표제 보강 | Iris (In / Out), Tilt-shift (Miniature Effect) |
+| Dolly Zoom | 정의 수정 | "반대 방향으로 동시에" (원문 4:18은 한 방향뿐) |
+| Camera Shake | 범주 이동 | 영상의 렌즈·빛 묶음 → Camera · Movement (Handheld와 비교) |
+| Whip Pan | 범주 유지 | 카메라 무브지만 Edit · Transition (영상 10:28이 전환으로 사용) |
+
+산식: 50 − 1(High/Low 병합) − 1(Reverse 제외) + 7(신규) = 55 → 이미 아는 2장(Zoom In, Slow Motion) 제외 = **53**
+
+## Camera·Edit·Look 섹션 연결 메모
+
+영상 섹션과 웹(Motion·Style) 섹션이 겹치거나 헷갈리는 지점.
+
+- **공통 개념**: Easing, Keyframe, Timeline, Motion Path. 영상 편집 도구(키프레임 보간, 그래프 에디터)에서도 같은 이름과 같은 뜻으로 쓴다. 특히 `Motion · Timeline`은 `Edit · Time` 카드의 구현 API다(`timeScale()` → Time-lapse·Speed Ramp, `pause()` → Freeze Frame, `reverse()` → Reverse).
+- **같은 이름, 다른 대상**:
+  - **Wipe**: 웹에서는 페이지를 덮는 전환이고, 편집에서는 컷 사이의 전환이다. 두 섹션에 각각 두고 서로 비교한다.
+  - **Fade 3종**: `Motion · Fade`(UI 요소 투명도) / `Edit · Fade to Black`(화면이 완전한 검정을 거침) / `Edit · Dissolve`(두 숏이 겹치며 전환).
+- **구현 API vs 비유**:
+  - `Scale` = **Zoom In의 구현 API**(화면 전체에 균일 확대는 광학 줌과 결과가 같다). **Dolly In과는 비유**(카메라가 실제로 이동해 원근이 바뀐다).
+  - `Parallax` ↔ `Dolly In / Tracking Shot`: 의미는 비유로만 연결한다(층 속도차 vs 카메라 이동). 단 2D SVG 데모 구현에서는 Parallax 층 기법을 쓴다.
+  - `Pin` ↔ locked-off shot: 스크롤 위치를 고정하는 것과 카메라 구도를 고정하는 것은 다르다.
+  - `Shared Element` ↔ `Match Cut`: Shared Element는 *같은 요소*가 이어지고, Match Cut은 *다른 요소*가 형태만 닮는다.
 
 ## 결정 기록
 
@@ -131,3 +157,4 @@
 - 토의 원본은 `.herdr-discuss/20261122-0203-ui-motion-terms/summary.md`에 있다. git에서는 제외되어 로컬에만 있다.
 - 2026-11-22: `style.md`에서 출처를 모두 삭제했다(사용자 결정). 위 규칙 2의 "출처 필수"는 Style 섹션에 적용하지 않는다.
 - 외부 출처 링크는 토의 중에 일부만 직접 열람했다. 카드를 구현할 때 링크마다 다시 확인한다.
+- 2026-11-23: agy·Claude(`opus`, effort `medium`) 토의(6턴)로 3탄 영상 50개의 `camera.md`·`edit.md`·`look.md` 3파일 분리, 표제·정의 보정, 신규 7장 추가를 합의했다. 사용자 결정으로 이미 아는 2장(`Zoom In`, `Slow Motion`)을 제외해 53장(전체 182장)으로 확정했다. 토의 원본은 `.herdr-discuss/20261123-1922-video-terms/summary.md`에 있다.
