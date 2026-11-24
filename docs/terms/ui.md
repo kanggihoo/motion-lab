@@ -43,7 +43,6 @@
 - **요청 예문**: "랜딩 첫 화면을 Hero Section으로: 한 줄 제목, 두 줄 설명, 'Start for Free' CTA 버튼, 오른쪽에 제품 이미지."
 - **구현**: `<section>` + `<h1>`, CTA는 이동이면 `<a>`, 동작이면 `<button>`
 - **관계**: CTA(Call to Action) = 구성 요소. "가장 누르게 하고 싶은 버튼"
-- **출처**: 1탄 1:03~1:32
 
 ### Grid Layout *(추가)*
 - **무엇**: 행과 열을 정하고, 각 항목이 몇 칸을 차지할지 지정하는 배치다.
@@ -59,7 +58,6 @@
 - **요청 예문**: "핵심 기능은 큰 카드, 나머지는 작은 카드로 Bento Grid 섹션. 모바일은 1열."
 - **구현**: Grid + `grid-column`/`grid-row` span, `grid-auto-flow: dense`
 - **관계**: Grid Layout의 응용. Masonry와 비교하면, Bento는 *중요도*로 크기를 정하고 Masonry는 *내용 높이*에 따라 채운다
-- **출처**: 1탄 2:38
 
 ### Masonry Layout *(추가)*
 - **무엇**: 높이가 제각각인 항목을, 빈 공간이 남은 열에 차례로 채워 넣는 배치다. Pinterest식 배치가 대표 예다.
@@ -75,7 +73,6 @@
 - **요청 예문**: "왼쪽에 고정 사이드바 내비게이션, 오른쪽에 메인 콘텐츠인 대시보드 레이아웃."
 - **구현**: `grid-template-columns: 240px 1fr`, 사이드바는 `position: sticky` 또는 독립 스크롤
 - **관계**: 좁은 화면에서는 Drawer로 바뀌는 경우가 흔하다 검색 별칭: Side Nav.
-- **출처**: 1탄 2:38~3:09
 
 ### Sticky Header
 - **무엇**: 스크롤해도 상단에 붙어 있는 헤더다.
@@ -83,14 +80,12 @@
 - **요청 예문**: "상단 내비게이션을 Sticky Header로, 스크롤 중에도 보이게."
 - **구현**: `position: sticky; top: 0`. 부모 요소에 `overflow: hidden`이 있으면 동작하지 않는다
 - **관계**: Pin과 비교. Sticky Header는 *계속* 붙어 있고, Pin은 *정해진 스크롤 구간 동안만* 고정된다
-- **출처**: 1탄 3:09
 
 ### Split Layout
 - **무엇**: 이미지와 텍스트를 좌우로 나누는 배치다. 좁아지면 위아래로 쌓인다.
 - **데모**: 50/50 배치. 폭 슬라이더를 움직이면 세로로 쌓인다. 비율을 50/50 ↔ 40/60으로 바꿔 볼 수 있다.
 - **요청 예문**: "데스크톱은 이미지·설명을 50/50 Split Layout으로, 모바일은 세로로 쌓기."
 - **구현**: `grid-template-columns: 1fr 1fr` + breakpoint에서 `1fr`
-- **출처**: 1탄 3:42
 
 ### Aspect Ratio *(shadcn)*
 - **무엇**: 내용을 정해진 가로세로 비율(16:9, 4:3, 1:1)로 고정하는 상자다. 이미지가 늦게 로드돼도 자리가 미리 잡혀서 레이아웃이 튀지 않는다.
@@ -168,7 +163,6 @@
 - **요청 예문**: "개요·기능·가격을 Tabs 컴포넌트로, 선택된 탭 강조, 화살표 키 이동."
 - **구현**: `role="tablist"` / `"tab"` / `"tabpanel"`, `aria-selected`, 화살표 키 처리(WAI-ARIA APG Tabs)
 - **관계**: Accordion과 비교. Tabs는 *가로로 전환*하고, Accordion은 *세로로 펼친다* 검색 별칭: Tab List.
-- **출처**: 1탄 4:11
 
 ### Breadcrumb *(shadcn)*
 - **무엇**: 현재 페이지가 사이트 계층의 어디에 있는지 "홈 > 설정 > 알림"처럼 경로로 보여 준다.
@@ -203,7 +197,7 @@
 - **요청 예문**: "카드의 ⋯ 버튼을 누르면 복제·삭제가 있는 Dropdown Menu."
 - **구현**: WAI-ARIA APG Menu Button 패턴(`aria-haspopup`, `role="menu"`), `popover` 속성
 - **관계**: Select와 비교. Menu는 *명령 실행*, Select는 *값 선택*이다. 영상의 Dropdown 예시(정렬 기준 선택)는 실제로는 Select다 검색 별칭: More Menu.
-- **출처**: 1탄 5:13~5:43, [APG Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)
+- **출처**: [APG Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)
 
 ### Context Menu *(shadcn)*
 - **무엇**: 오른쪽 클릭(모바일은 길게 누르기)으로 여는 메뉴다. 평소에는 보이지 않는다.
@@ -264,7 +258,6 @@
 - **요청 예문**: "설정 버튼을 누르면 오른쪽 Drawer가 열리고, 바깥 클릭이나 ESC로 닫힘."
 - **구현**: `<dialog>` + `transform: translateX(100%)` → `0`. 들어오는 움직임은 Motion · Slide
 - **관계**: Bottom Sheet = 변형(모바일에서 아래에서 올라옴). Modal Dialog와 비교(위 참고) 검색 별칭: Bottom Sheet.
-- **출처**: 1탄 5:13
 
 ### Popover *(추가)*
 - **무엇**: 트리거 옆에 **클릭할 수 있는 내용**을 띄운다. 예: 설정값, 공유 옵션.
@@ -289,7 +282,7 @@
 - **요청 예문**: "설정 항목 옆 도움말 아이콘에 Tooltip, hover와 키보드 focus 둘 다."
 - **구현**: `aria-describedby`. 마우스를 Tooltip 위로 옮겨도 사라지지 않고 ESC로 닫을 수 있어야 한다(WCAG 1.4.13)
 - **관계**: Popover와 비교. Tooltip 안에 클릭할 것이 있어야 한다면 Popover를 써야 한다 검색 별칭: Info Tip.
-- **출처**: 1탄 5:43~6:09
+
 ### Lightbox *(추가)*
 - **무엇**: 클릭한 사진이나 영상을 어두운 배경 위에 크게 보는 화면이다.
 - **데모**: 썸네일을 열어 확대 이미지를 보고, 이전·다음과 Esc로 조작한다.
@@ -523,7 +516,6 @@
 - **데모**: FAQ 3개. 펼칠 때 화살표가 90° 돌아간다(제외한 Rotate 용어의 사례). "하나만 열림 / 여러 개 열림"을 전환할 수 있다.
 - **요청 예문**: "FAQ를 Accordion으로, 질문을 누르면 답이 펼쳐지고 다시 누르면 접힘."
 - **구현**: `<details>` / `<summary>`(네이티브), 커스텀이면 `aria-expanded`
-- **출처**: 1탄 4:31~4:42
 
 ### Collapsible *(shadcn)*
 - **무엇**: 패널 **하나**를 접고 펼친다. 예: "더 보기", "고급 설정 펼치기".
@@ -540,7 +532,6 @@
 - **요청 예문**: "고객 리뷰를 Carousel로, 좌우 버튼과 모바일 스와이프."
 - **구현**: `overflow-x: auto` + `scroll-snap-type: x mandatory`. 자동 넘김을 넣으면 정지 버튼이 필수다(WCAG 2.2.2)
 - **관계**: Scroll Snap = 구현 수단. Pinned Horizontal Scroll과 비교하면, Carousel은 *가로 입력*(스와이프·버튼)이고 Pinned Horizontal Scroll은 *세로 스크롤을 가로 이동으로 바꾼다*
-- **출처**: 1탄 6:09~6:41
 
 ### Avatar *(shadcn)*
 - **무엇**: 사용자를 나타내는 작은 원형 이미지다. 이미지가 없거나 로드에 실패하면 이니셜로 대체한다.
@@ -721,7 +712,6 @@
 - **요청 예문**: "저장 버튼에 Micro-interaction: 누르면 로딩 표시, 완료되면 체크 아이콘으로 바뀌었다가 2초 뒤 복귀."
 - **구현**: 상태 기계(idle/loading/success). 아이콘 전환은 Motion · Morphing이나 Scale
 - **관계**: 움직임 자체는 Motion 카드들(Scale, Spring, Morphing)로 만든다
-- **출처**: 1탄 9:18
 ### Status Dot *(추가)*
 - **무엇**: 온라인, 오프라인, 점검처럼 현재 상태를 짧게 표시하는 점이다.
 - **데모**: 세 상태를 바꿔 본다. 점과 함께 서로 다른 기호와 상태명을 표시한다.
