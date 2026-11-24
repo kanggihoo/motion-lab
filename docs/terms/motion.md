@@ -4,7 +4,6 @@
 
 | 범주 | 카드 | 수 |
 |---|---|---|
-| 공통 (범주 없음, 섹션 맨 앞) | Reduced Motion | 1 |
 | Basics | Fade, Slide, Scale | 3 |
 | Timing & Sequence | Easing, Spring, Bounce, Duration / Delay, Stagger, Loop, Keyframe, Timeline | 8 |
 | Text & Graphic | Typewriter, Text Scramble, Split Text, Count-up, Line Drawing, Morphing, Marquee, Motion Path | 8 |
@@ -12,24 +11,10 @@
 | Transition | Page Transition, Shared Element Transition | 2 |
 | Pointer & Event | Magnetic Button, Custom Cursor, 3D Tilt, Confetti | 4 |
 
-영상 출처: 2탄 = https://www.youtube.com/watch?v=r7iS0Gw3Jq4, 1탄 = https://www.youtube.com/watch?v=mlhKEy-2bgI
 
 **이 섹션 데모의 공통점**
 - 모든 데모에 **"다시 재생"** 버튼이 있다. 시간이 핵심인 카드에는 **속도 슬라이더**(0.25× ~ 2×)를 둔다.
 - 개발 중에는 GSDevTools로 타임라인을 긁어 본다(`AGENTS.md` 개발용 도구).
-- Reduced Motion에서는 시작 상태와 끝 상태를 나란히 정지 화면으로 보여 준다.
-
----
-
-## 공통
-
-### Reduced Motion *(추가)*
-- **무엇**: 기기 설정 "동작 줄이기"를 켠 사용자에게 비필수 움직임을 멈추고, 같은 정보를 정적인 상태로 전달하는 것이다. 특정 효과가 아니라 **모든 모션 요청에 붙는 조건**이다.
-- **데모**: 대시보드 전체에 "Reduced Motion 미리보기" 토글을 둔다. 켜면 모든 카드가 정지 전/후 화면으로 바뀐다. OS 설정이 켜져 있으면 처음부터 켜진 상태로 시작한다.
-- **요청 예문**: "모든 애니메이션은 prefers-reduced-motion이 reduce이면 끄고, 단계별 정지 화면으로 같은 내용을 보여 줄 것."
-- **구현**: CSS `@media (prefers-reduced-motion: reduce)`, GSAP `gsap.matchMedia()`
-- **이 저장소의 예**: `src/connection-pool/Scrolly.tsx:125`. 움직임을 줄이면 스크롤 위치가 속한 단계의 정지 화면만 그린다
-- **출처**: 2탄 10:19·11:43, 1탄 8:51, [W3C Media Queries 5](https://www.w3.org/TR/mediaqueries-5/#prefers-reduced-motion)
 
 ---
 
@@ -41,7 +26,6 @@
 - **요청 예문**: "모달이 열릴 때 배경을 0.2초 Fade In, 닫힐 때 Fade Out."
 - **구현**: `opacity` + `transition`, GSAP `autoAlpha`(opacity와 함께 `visibility`도 바꿔서 투명한 요소가 클릭을 막지 않는다)
 - **관계**: 실무에서는 Slide와 섞어 "살짝 올라오며 나타남"으로 많이 쓴다
-- **출처**: 2탄 1:33~1:51
 
 ### Slide
 - **무엇**: 화면 밖이나 근처에서 미끄러져 들어온다. **방향**(위·아래·좌·우)이 핵심이다.
@@ -49,7 +33,6 @@
 - **요청 예문**: "알림 배너가 화면 위에서 Slide Down으로 들어오고 3초 뒤 다시 올라감."
 - **구현**: `transform: translate`(레이아웃을 다시 계산하지 않아 `top`/`left`보다 싸다), GSAP `x`·`y`
 - **관계**: Drawer와 Toast의 등장이 이 움직임이다
-- **출처**: 2탄 1:51~2:20
 
 ### Scale
 - **무엇**: 크기가 바뀐다. 커졌다가 원래대로 돌아오면 "톡 튀어나오는" **Pop**이 된다.
@@ -57,7 +40,6 @@
 - **요청 예문**: "장바구니에 담으면 숫자 배지를 Scale Pop으로 강조."
 - **구현**: `transform: scale()`, `transform-origin`, GSAP `scale` + `ease: "back.out"`
 - **관계**: Pop = 변형. 튀는 느낌을 더 원하면 Spring
-- **출처**: 2탄 2:20~2:36
 
 ---
 
@@ -73,7 +55,6 @@
 - **구현**: CSS `transition-timing-function`, `cubic-bezier()`, GSAP `power2.out` 등
 - **이 저장소의 예**: `src/connection-pool/sim.ts:40`, `:66`
 - **관계**: 영상 편집의 키프레임 보간과 같은 개념(Camera·Edit 섹션의 공통 개념)
-- **출처**: 2탄 2:46~3:13
 
 ### Spring
 - **무엇**: 목표를 **살짝 지나쳤다가** 되돌아와 자리 잡는 탄성 있는 움직임이다. stiffness(뻣뻣함)와 damping(감쇠)으로 출렁임을 조절한다.
@@ -81,7 +62,6 @@
 - **요청 예문**: "카드를 누르면 Spring으로 살짝 커지고, 한 번만 은은하게 출렁이게."
 - **구현**: GSAP에는 물리 기반 spring이 따로 없다. `back.out`(한 번 넘어감)이나 `elastic.out`으로 근사한다. CSS는 `linear()` 함수로 spring 곡선을 직접 찍을 수 있다
 - **관계**: Bounce와 비교. Spring은 목표를 *지나쳤다 돌아오고*, Bounce는 *바닥에 부딪혀 튄다*
-- **출처**: 2탄 3:13~3:40
 
 ### Bounce
 - **무엇**: 공이 바닥에 떨어져 몇 번 튀다가 멈추는 움직임이다. 귀여운 디테일에만 아껴 쓴다.
@@ -89,7 +69,6 @@
 - **요청 예문**: "결제 완료 체크 아이콘이 위에서 떨어져 Bounce 두 번 하고 멈춤."
 - **구현**: GSAP `ease: "bounce.out"`
 - **관계**: Spring과 비교(위 참고)
-- **출처**: 2탄 3:40~3:59
 
 ### Duration / Delay
 - **무엇**: **duration**은 움직이는 데 걸리는 시간이고, **delay**는 움직이기 전에 기다리는 시간이다.
@@ -99,7 +78,6 @@
 - **요청 예문**: "제목은 바로, 설명은 0.2초 Delay 후 등장, 둘 다 Duration 0.4초."
 - **구현**: `transition-duration`, `transition-delay`, GSAP `duration`·`delay`
 - **관계**: 1탄의 Smooth Transition은 검색하면 여기로 온다(hover 200ms = hover 상태 + Duration 0.2초 + Easing). Stagger는 이 delay를 순서대로 준 것이다
-- **출처**: 2탄 3:59~4:28, 1탄 7:53(Smooth Transition)
 
 ### Stagger *(1탄과 2탄을 한 장으로)*
 - **무엇**: 여러 요소가 한꺼번에가 아니라 **시간차를 두고 차례로** 움직인다. 요소가 같아도 순서가 리듬을 만든다.
@@ -107,7 +85,6 @@
 - **요청 예문**: "카드 목록이 처음 나타날 때 0.1초 간격 Stagger로 하나씩 Fade In."
 - **구현**: GSAP `stagger: 0.1`(`{ each, from: "center" }`), CSS는 `transition-delay: calc(var(--i) * 100ms)`
 - **관계**: Duration / Delay의 응용. Split Text는 글자 단위 Stagger다
-- **출처**: 1탄 7:26~7:53, 2탄 3:59
 
 ### Loop
 - **무엇**: 멈추지 않고 반복되는 움직임이다. 아이콘이 둥실 떠 있는 **Floating**이 대표적이다. 시선을 끌지만, 한 화면에 여러 개가 있으면 산만하다.
@@ -115,7 +92,6 @@
 - **요청 예문**: "히어로 일러스트에 Floating Loop, 한 주기 4초로 아주 천천히 위아래."
 - **구현**: CSS `animation-iteration-count: infinite` + `alternate`, GSAP `repeat: -1, yoyo: true`. 5초 넘게 자동으로 움직이면 정지 수단이 필요하다(WCAG 2.2.2)
 - **관계**: Floating = 사례. 계속 도는 회전도 Loop의 사례다(제외한 Rotate 용어)
-- **출처**: 2탄 4:28~4:58
 
 ### Keyframe *(추가)*
 - **무엇**: 움직임 중간의 **특정 시점의 상태**를 직접 찍어 두는 것이다. 예: "60% 지점에서 최대 크기, 100%에서 원래 크기".
@@ -142,14 +118,12 @@
 - **데모**: 히어로 제목이 타이핑된다. 커서를 켜고 끌 수 있고, 타이핑 속도 슬라이더가 있다.
 - **요청 예문**: "히어로 제목에 Typewriter 효과, 끝에 깜빡이는 커서."
 - **구현**: CSS `steps()` + `width`(고정폭 글꼴일 때), GSAP TextPlugin. 스크린리더용으로 전체 문장을 처음부터 DOM에 둔다
-- **출처**: 2탄 4:58
 
 ### Text Scramble
 - **무엇**: 무작위 문자가 빠르게 뒤섞이다가 원래 단어로 맞춰진다. 영화 해커 화면 같은 기술적 분위기를 낸다.
 - **데모**: 섹션 제목이 1초 동안 scramble된 뒤 확정된다. 섞을 문자 집합(영문 / 숫자 / 기호)을 바꿔 볼 수 있다.
 - **요청 예문**: "섹션 제목이 화면에 들어오면 1초간 Text Scramble 후 원래 글자로."
 - **구현**: GSAP ScrambleTextPlugin(현재 무료). 진행 중에는 `aria-label`로 최종 문장을 제공한다
-- **출처**: 2탄 4:58~5:25
 
 ### Split Text
 - **무엇**: 제목을 글자나 단어 단위로 쪼개서 하나씩 등장시킨다. 숨겨진 글자가 드러나서 **Text Reveal**이라고도 한다.
@@ -157,35 +131,30 @@
 - **요청 예문**: "메인 제목을 단어 단위 Split Text Reveal로, 아래에서 하나씩 올라오게."
 - **구현**: GSAP SplitText(`aria` 옵션으로 쪼개진 글자의 스크린리더 처리), 각 조각에 Stagger. 한국어는 글자 단위로 쪼개면 어색해서 단어 단위를 권장한다
 - **관계**: 글자 단위 Stagger. Text Reveal은 더 넓은 이름이라 쪼개지 않는 reveal(후속 후보 Mask / Clip Reveal)도 포함한다
-- **출처**: 2탄 5:25~6:03
 
 ### Count-up
 - **무엇**: 숫자가 0부터 빠르게 올라가 목표값에서 멈춘다. 가입자 수, 다운로드 수처럼 자랑하고 싶은 수치에 쓴다.
 - **데모**: 통계 3개가 2초 동안 count-up하고, 끝에서 느려진다(ease-out). Easing을 linear로 바꿔 비교할 수 있다.
 - **요청 예문**: "통계 섹션이 보이면 숫자를 0부터 목표값까지 2초 Count-up, 끝에서 느려지게."
 - **구현**: GSAP으로 객체 값을 tween + `snap`, 표시는 `Intl.NumberFormat`. 최종 값은 처음부터 DOM이나 `aria-label`에 둔다(스크린리더가 중간 숫자를 읽지 않게)
-- **출처**: 2탄 6:03
 
 ### Line Drawing
 - **무엇**: 보이지 않던 선이 펜으로 그리듯 그려진다. 로고, 아이콘, 차트 같은 SVG 선에 쓴다.
 - **데모**: 꺾은선 그래프가 1.5초 동안 왼쪽에서 오른쪽으로 그려진다. 스크롤에 묶는 버전(Scroll Scrub)과 비교하는 토글이 있다.
 - **요청 예문**: "그래프가 나타날 때 선을 왼쪽에서 오른쪽으로 1.5초 Line Drawing."
 - **구현**: SVG `stroke-dasharray` + `stroke-dashoffset`, GSAP DrawSVGPlugin
-- **출처**: 2탄 6:03
 
 ### Morphing
 - **무엇**: 한 모양이 다른 모양으로 부드럽게 바뀐다. 예: 햄버거 메뉴(☰) → X. 전후가 이어져 있어서 "상태가 바뀌었다"가 자연스럽게 전달된다.
 - **데모**: 햄버거 아이콘을 누르면 X로 morph된다. 저장 → 체크 아이콘도 있다. 그냥 교체했을 때와 나란히 비교한다.
 - **요청 예문**: "햄버거 아이콘을 누르면 세 줄이 X로 Morphing되며 메뉴가 열림."
 - **구현**: GSAP MorphSVGPlugin(현재 무료). 햄버거 → X는 선 3개를 회전·이동시키는 쪽이 더 간단하다. 버튼에 `aria-expanded`
-- **출처**: 2탄 6:03~6:54
 
 ### Marquee
 - **무엇**: 로고나 문구가 띠처럼 옆으로 끝없이 흐른다. 고객사 로고, 짧은 후기처럼 좁은 공간에 많이 보여 줄 때 쓴다.
 - **데모**: 고객사 로고 띠. hover나 focus에서 멈춘다. 일시정지 버튼도 있다.
 - **요청 예문**: "고객사 로고를 끝없는 Marquee로, 마우스를 올리면 정지."
 - **구현**: 목록을 두 번 이어 붙이고 `@keyframes`로 `translateX(-50%)`, `animation-play-state: paused`. 복제한 목록은 `aria-hidden`. 자동으로 계속 움직이므로 정지 수단이 필수다(WCAG 2.2.2)
-- **출처**: 2탄 6:54
 
 ### Motion Path
 - **무엇**: 직선이 아니라 미리 정한 **곡선 경로**를 따라 날아간다. 예: 상품 이미지가 호를 그리며 장바구니로 들어간다.
@@ -193,7 +162,6 @@
 - **요청 예문**: "'담기'를 누르면 상품 이미지가 곡선 Motion Path를 따라 장바구니 아이콘으로."
 - **구현**: GSAP MotionPathPlugin, CSS `offset-path`
 - **관계**: 영상의 카메라 패스와 같은 개념(Camera 섹션의 공통 개념)
-- **출처**: 2탄 6:54~7:14
 
 ---
 
@@ -213,7 +181,6 @@
 - **요청 예문**: "각 기능 섹션이 화면에 들어오면 0.4초 동안 살짝 올라오며 나타나는 Scroll Reveal, 한 번만."
 - **구현**: `IntersectionObserver`, GSAP ScrollTrigger `toggleActions`·`once`, CSS `animation-timeline: view()`
 - **관계**: Scroll Scrub과 비교(위 참고). 순차 등장은 Stagger와 함께
-- **출처**: 1탄 7:26
 
 ### Scroll Scrub *(추가)*
 - **무엇**: 스크롤 위치가 애니메이션의 **진행률**이 된다. 멈추면 멈추고, 거꾸로 스크롤하면 되감긴다.
@@ -230,7 +197,6 @@
 - **구현**: GSAP ScrollTrigger `pin: true`, CSS `position: sticky`(부모 높이로 고정 구간을 만든다)
 - **이 저장소의 예**: `src/connection-pool/Scrolly.tsx:158`. 다이어그램을 `sticky top-0`으로 고정한다
 - **관계**: Sticky Header와 비교. Pin은 *구간 동안만* 고정된다. 키보드 사용자가 고정 영역에 갇히지 않게 한다(`AGENTS.md` 사용성 기준)
-- **출처**: 2탄 8:27
 
 ### Scrollytelling *(Pin · Scrollytelling에서 분리)*
 - **무엇**: 스크롤에 따라 **이야기가 단계별로** 펼쳐지는 페이지 구성이다. 기법이 아니라 페이지 형식이고, 보통 Pin + Scroll Scrub으로 만든다.
@@ -238,15 +204,13 @@
 - **요청 예문**: "기능 소개를 Scrollytelling으로: 그림은 고정하고, 오른쪽 문단이 스크롤될 때마다 그림이 3단계로 바뀌게."
 - **구현**: 고정된 그래픽 + 단계 문단 + 단계 판정(ScrollTrigger나 `IntersectionObserver`)
 - **이 저장소의 예**: `src/connection-pool/` 에세이 전체. 가장 큰 실물 예시라 카드에서 링크한다
-- **출처**: 2탄 8:27
 
 ### Parallax Scrolling *(UI에서 이동)*
 - **무엇**: 앞쪽과 뒤쪽 요소가 **다른 속도로** 움직여 깊이감을 만든다. 너무 강하면 어지러우니 은은하게 쓴다.
-- **데모**: 배경, 중간, 전경 3층. 강도 슬라이더가 있고, Reduced Motion이면 모든 층이 같은 속도로 움직인다.
-- **요청 예문**: "히어로 배경에 은은한 Parallax Scrolling, 모바일과 Reduced Motion에서는 약하게 또는 끔."
+- **데모**: 배경, 중간, 전경 3층. 강도 슬라이더가 있다.
+- **요청 예문**: "히어로 배경에 은은한 Parallax Scrolling, 모바일에서는 약하게 또는 끔."
 - **구현**: ScrollTrigger + scrub으로 층마다 다른 `y`, CSS `animation-timeline: scroll()`
 - **관계**: dolly와는 비유로만 연결한다(Camera 메모 참고)
-- **출처**: 1탄 8:25~8:51
 
 ### Scroll Snap *(UI에서 이동)*
 - **무엇**: 스크롤을 멈추면 화면이 특정 섹션 경계에 딱 맞춰 정렬된다.
@@ -254,7 +218,6 @@
 - **요청 예문**: "전체 화면 섹션에 Scroll Snap을 적용해서 어중간하게 멈추지 않게."
 - **구현**: `scroll-snap-type: y mandatory`, `scroll-snap-align: start`. JS가 필요 없다
 - **관계**: 움직임이 아니라 *정지 위치*를 정한다. Carousel의 구현 수단이기도 하다
-- **출처**: 1탄 9:05~9:18
 
 ### Pinned Horizontal Scroll *(표제 변경, 원제 Horizontal Scroll)*
 - **무엇**: 마우스 휠은 아래로 굴리는데 화면은 옆으로 넘어간다. 섹션을 Pin으로 고정하고, 세로 스크롤 양만큼 안쪽 내용을 가로로 민다.
@@ -262,7 +225,6 @@
 - **요청 예문**: "프로젝트 섹션을 Pinned Horizontal Scroll로: 세로 스크롤에 카드가 가로로 이동, 모바일은 세로 목록."
 - **구현**: ScrollTrigger `pin` + `scrub` + `x: -(trackWidth - viewportWidth)`, 모바일은 `gsap.matchMedia()`로 분기
 - **관계**: Pin + Scroll Scrub의 응용. Carousel과 비교(입력 축이 다르다)
-- **출처**: 2탄 8:27~8:55
 
 ---
 
@@ -274,7 +236,6 @@
 - **요청 예문**: "페이지 이동 시 Page Transition: 0.3초 Fade Out 후 새 페이지가 아래에서 살짝 올라오게."
 - **구현**: View Transitions API(`document.startViewTransition()`, 다중 페이지는 `@view-transition`), `::view-transition-old`/`new`
 - **관계**: Wipe = 변형. View Transitions = 구현 API. 영상 편집의 wipe와는 대상이 다르다(Edit 섹션에서 비교)
-- **출처**: 2탄 7:32~8:05
 
 ### Shared Element Transition
 - **무엇**: 목록의 카드를 누르면 그 카드가 커져서 상세 화면이 된다. 두 화면이 **같은 요소를 공유**해서, 누른 것이 어디로 갔는지 놓치지 않는다.
@@ -282,7 +243,7 @@
 - **요청 예문**: "상품 카드를 누르면 카드 이미지가 상세 페이지 이미지로 이어지는 Shared Element Transition."
 - **구현**: View Transitions API + `view-transition-name`, 또는 GSAP Flip plugin
 - **관계**: View Transitions는 이것의 구현 API이고, 페이지 전체 전환에도 쓰인다. 영상 편집의 match cut과는 비유로만 연결한다(같은 요소 vs 닮은 다른 요소)
-- **출처**: 2탄 8:05~8:27, [W3C View Transitions](https://www.w3.org/TR/css-view-transitions-1/)
+- **출처**: [W3C View Transitions](https://www.w3.org/TR/css-view-transitions-1/)
 
 ---
 
@@ -293,7 +254,6 @@
 - **데모**: CTA 버튼. 끌림 최대값 슬라이더(0 / 10 / 30px)로, 커지면 누르기 어려워지는 것을 체감한다. 터치 기기에서는 꺼진다.
 - **요청 예문**: "메인 CTA에 Magnetic 효과, 커서가 가까우면 최대 10px 끌려오게, 터치 기기에선 끔."
 - **구현**: `pointermove` + GSAP `quickTo`, `@media (hover: hover) and (pointer: fine)`
-- **출처**: 2탄 8:55~9:23
 
 ### Custom Cursor
 - **무엇**: 기본 화살표 대신 작은 원이 마우스를 따라온다(Cursor Follow). 링크 위에서 커지거나 글자를 담기도 한다. 터치 화면에는 커서가 없으니 모바일에서는 끈다.
@@ -301,19 +261,15 @@
 - **요청 예문**: "데스크톱에서만 작은 원형 Custom Cursor가 살짝 늦게 따라오고, 링크 위에서 커지게."
 - **구현**: `pointermove` + `quickTo`, `pointer-events: none`. 기본 커서를 숨기면(`cursor: none`) 위치를 잃는 사용자가 생기니 숨기지 않는 쪽을 권장한다
 - **관계**: Cursor Follow = 별칭
-- **출처**: 2탄 9:23~9:52
 
 ### 3D Tilt
 - **무엇**: 마우스를 카드 위에서 움직이면 카드가 그 방향으로 기운다. 반사광이 같이 움직이면 실물 카드를 보는 것 같다.
 - **데모**: 가격 카드. 최대 기울기 슬라이더(0~20°), 반사광을 켜고 끌 수 있다.
 - **요청 예문**: "가격 카드에 마우스 위치 기준 최대 10° 3D Tilt, 반사광도 같이 이동."
 - **구현**: `perspective` + `rotateX`/`rotateY`, 반사광은 `radial-gradient` 위치. CSS 3D라서 `AGENTS.md`가 금지한 Three.js와는 무관하다
-- **출처**: 2탄 9:52~10:10
 
 ### Confetti
 - **무엇**: 결제 완료 같은 축하의 순간에 색종이가 터진다. 매번 터지면 금방 의미가 없어지니, 가입이나 첫 결제처럼 드문 순간에 아껴 쓴다.
-- **데모**: "첫 결제 완료" 버튼을 누르면 상단에서 2초 동안 confetti가 터진다. Reduced Motion이면 정지된 축하 배지로 대체된다.
-- **요청 예문**: "첫 결제가 끝나면 화면 상단에서 2초간 Confetti, Reduced Motion 사용자에겐 생략."
+- **데모**: "첫 결제 완료" 버튼을 누르면 상단에서 2초 동안 confetti가 터진다.- **요청 예문**: "첫 결제가 끝나면 화면 상단에서 2초간 Confetti."
 - **구현**: SVG/DOM 입자 수십 개 + GSAP(무작위 `x`·`y`·`rotation`). 라이브러리는 `AGENTS.md` 허용 표 밖이라 직접 만든다
 - **관계**: 포인터가 아니라 *사건*이 시작 조건이다. 그래서 범주 이름이 "Pointer & Event"다
-- **출처**: 2탄 10:10~10:19

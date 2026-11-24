@@ -7,12 +7,10 @@
 | Color & Light | Color Grading, Selective Color, Day for Night, Volumetric Light | 4 |
 | Texture & Frame | Film Grain, Letterbox, Vignette | 3 |
 
-영상 출처: 3탄 = https://www.youtube.com/watch?v=RHXioQ2WjN0  
-요청 공식 (3탄 24:48): **효과 이름 + 대상 + 방식** (`effect name + what to apply it to + how`)
+요청 공식 **효과 이름 + 대상 + 방식** (`effect name + what to apply it to + how`)
 
 **이 섹션 데모의 공통점**
 - 같은 일러스트 장면에 효과를 켜고 끄는 **전/후 분할 비교(또는 슬라이더)**로 보여 준다.
-- 대부분 정적 시각 처리이므로 Reduced Motion의 영향을 거의 받지 않으며, `Film Grain`의 미세 입자 움직임만 reduce 상태에서 정지 질감으로 고정한다.
 
 ---
 
@@ -26,7 +24,6 @@
   - 촬영·편집 — DaVinci Resolve / Premiere Lumetri Color(LUT, Lift/Gamma/Gain, 색바퀴)
   - 웹 데모 — SVG `<feColorMatrix>` 또는 CSS `filter` + 색 오버레이 블렌드
 - **관계**: Color Correction = 선행 단계(정상화 vs 분위기 창조). Teal & Orange = 대표 변형. `Edit · Flashback`의 과거 표시 관습
-- **출처**: 3탄 19:49~20:11
 
 ### Selective Color
 - **무엇**: 화면 전체를 흑백으로 만들고 강조할 단 하나의 색만 남기는 기법이다. 시청자의 시선을 남은 색의 피사체로 즉각 집중시킨다(예: *쉰들러 리스트*의 빨간 코트).
@@ -36,7 +33,6 @@
   - 촬영·편집 — HSL Secondary 색 분리 + 나머지 채도 0%
   - 웹 데모 — 배경 SVG 그룹에 `filter: grayscale(1)` 적용, 강조 대상 그룹만 컬러 유지
 - **관계**: Color Splash / Color Isolation = 별칭. `Color Grading`의 특수 변형
-- **출처**: 3탄 22:33~23:19
 
 ### Day for Night
 - **무엇**: 낮에 촬영한 장면을 후반 색보정으로 어둡고 푸르게 눌러 달빛 아래 밤 장면처럼 보이게 만드는 기법이다. 전체 어둡게 → 푸른 톤 → 하늘 더 어둡게의 3단계로 만든다.
@@ -46,7 +42,6 @@
   - 촬영·편집 — 노출 하향, 색온도 냉색 이동, 하늘 파워 윈도우/그라데이션 감광
   - 웹 데모 — `filter: brightness(0.45) contrast(1.15)` + 짙은 남색 `mix-blend-mode: multiply` + 상단 그라데이션
 - **관계**: American Night (*nuit américaine*) = 별칭. `Color Grading`의 특수 변형
-- **출처**: 3탄 23:19~23:42
 
 ### Volumetric Light *(표제 변경, 원제 God Rays)*
 - **무엇**: 공기 중의 안개·먼지·습기에 강한 빛이 부딪히며 빛줄기(광선 기둥)의 형태가 눈에 보이는 대기광 효과다. 숲·창가 장면에 신비롭고 입체적인 공간감을 준다.
@@ -56,7 +51,6 @@
   - 촬영·편집 — 현장 헤이저(hazer)·스모그 + 강한 역광, CG 볼류메트릭 셰이더
   - 웹 데모 — 사선 다각형 SVG + `linearGradient` 투명도 + `mix-blend-mode: screen`
 - **관계**: God Rays / Light Shafts / Crepuscular Rays = 별칭. `Camera · Lens Flare`와 함께 역광 연출에 자주 쓰임
-- **출처**: 3탄 22:10~22:33
 
 ---
 
@@ -64,13 +58,12 @@
 
 ### Film Grain
 - **무엇**: 아날로그 필름 고유의 미세한 은염 입자 질감을 디지털 화면에 더해 고전 영화 같은 따뜻함과 유기적 질감을 준다.
-- **데모**: 매끈한 디지털 노을 그네 화면과 입자가 살아 있는 Film Grain 화면을 확대경(loupe) 비교로 보여 준다. 강도 슬라이더를 두고, Reduced Motion에서는 입자 흔들림을 멈춘 정적 텍스처로 고정한다.
+- **데모**: 매끈한 디지털 노을 그네 화면과 입자가 살아 있는 Film Grain 화면을 확대경(loupe) 비교로 보여 준다. 강도 슬라이더를 둔다.
 - **요청 예문**: "노을 지는 그네 장면에 옛날 영화 같은 거친 Film Grain 질감 추가."
 - **구현**:
   - 촬영·편집 — 실제 필름 스캔 그레인 오버레이 또는 편집 툴 Film Grain 효과
   - 웹 데모 — SVG `<feTurbulence type="fractalNoise">` 오버레이 + `opacity` / `mix-blend-mode: overlay`
 - **관계**: `Style` 섹션에서 보류한 `Grain/Noise`(`style.md:12`)의 영상 룩 대응
-- **출처**: 3탄 23:42~23:56
 
 ### Letterbox
 - **무엇**: 영화용 와이드 화면비(`2.39:1` 등)를 표준 `16:9` 화면에 맞춰 담을 때 위아래에 생기는 검은 띠(마스킹)다. 촬영 기법 자체가 아니라 출력 화면비 포맷에서 비롯되며, 영화 같은 인상을 주는 연출로도 쓰인다.
@@ -80,7 +73,6 @@
   - 촬영·편집 — 시퀀스/출력 Aspect Ratio 설정 또는 상하 2.39:1 크롭 매트
   - 웹 데모 — CSS `aspect-ratio: 2.39 / 1` 또는 상하 검은 바 오버레이
 - **관계**: `Pillarbox` = 반대 개념(세로/4:3 영상을 와이드 화면에 넣을 때 좌우 검은 띠). `Aspect Ratio`와 연결
-- **출처**: 3탄 20:11~20:46
 
 ### Vignette *(추가)*
 - **무엇**: 화면 네 모서리와 가장자리를 자연스럽게 어둡게(또는 흐리게) 눌러 시청자의 시선을 화면 중앙 피사체로 모으는 처리다.
@@ -90,4 +82,3 @@
   - 촬영·편집 — Adobe Premiere Pro Lumetri Color `Vignette`(Amount·Midpoint·Roundness·Feather) 또는 대구경 렌즈 주변광량 저하
   - 웹 데모 — CSS `radial-gradient(circle, transparent 55%, rgba(0,0,0,0.65) 100%)` 오버레이
 - **관계**: `Edit · Flashback`의 "흐린 가장자리"(13:57) 표시 관습
-- **출처**: Adobe Premiere Pro 공식 문서 — Lumetri Color Vignette *(작성 시 직접 URL 열람 검증 필요)*

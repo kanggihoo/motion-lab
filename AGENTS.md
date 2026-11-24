@@ -52,6 +52,7 @@
 | 모션 | **GSAP + ScrollTrigger** | 스크럽·핀의 사실상 표준 |
 | 타입 | **TypeScript** | 이 프로젝트는 **상태 일관성이 핵심**이라 장면 상태를 타입으로 묶어두면 연속성 버그가 줄어든다 |
 | 배포 | **Vercel / Cloudflare Pages** | 정적이라 아무거나. 둘 다 무료 |
+| 테스트 | **Vitest + Playwright** | Vitest는 Vite 설정을 그대로 쓰는 단위 테스트, Playwright는 실제 브라우저에서 키보드 focus·역스크롤·새로고침 같은 연속성 기준을 확인한다 |
 
 > GSAP은 2024년 Webflow 인수 후 **기존 유료 플러그인까지 전부 무료**다. SplitText·MorphSVG·DrawSVG 등 포함.
 
@@ -90,7 +91,7 @@ ScrollTrigger { markers: true }  →  핀 경계 확인
 | **MDX** | 에피소드가 **3편 이상** 돼서 콘텐츠와 코드 분리가 실제로 아플 때 |
 | **HyperFrames** | 영상 파생물을 만들 때 (2~3회차, 아래 영상 도입 조건 참조) |
 
-**이 표에 없는 라이브러리를 제안하지 마라.** 유일한 예외는 용어 대시보드의 shadcn/ui다(아래 「용어 대시보드」).
+**이 표에 없는 라이브러리를 제안하지 마라.** 예외는 용어 대시보드의 shadcn/ui와 3D 데모의 Three.js + `@react-three/fiber`다(아래 「용어 대시보드」).
 
 ## 범위 밖 — 묻지 말고 넣지 마라
 
@@ -102,7 +103,7 @@ ScrollTrigger { markers: true }  →  핀 경계 확인
 | 백엔드 일체 (스케줄러·큐·DB·로그인·수집 서버) | **AI는 제작 단계에서만 쓰고, 공개 사이트는 승인된 결과물을 정적으로 제공한다.** 방문자마다 생성하지 않으므로 런타임이 필요 없다 |
 | 범용 장면 엔진 / 장면 에디터 | 추상화는 **2회차에서 실제 중복이 확인될 때.** 1회차에서 하지 않는다 |
 | 시리즈 셸 / 에피소드 목록 / "다음 편 예정" | 항목 하나짜리 목록은 지속의 증거가 아니라 죽은 블로그로 읽힌다. **2회차가 실제로 공개될 때** 붙인다 |
-| 테스트 프레임워크, CI, 스토리북 | 1인 주말 프로젝트다 |
+| CI, 스토리북 | 1인 주말 프로젝트다 |
 
 ## 모션 어휘 — 세 개만 (에세이)
 
@@ -237,8 +238,10 @@ ScrollTrigger { markers: true }  →  핀 경계 확인
 | 에세이 완성 기준 4개 | **적용 안 함.** 아래 대시보드 완성 기준을 쓴다 |
 | AI 생성 이미지 | **적용 안 함.** 대시보드에는 배경 이미지가 없다 |
 | 라이브러리는 조건부 표에 있는 것만 | **shadcn/ui 허용** (아래) |
+| Three.js, 3D는 범위 밖 | **3D로 보여야 이해되는 데모는 Three.js + `@react-three/fiber`로 만든다.** 쓸지는 구현자가 판단하고, `@react-three/drei`는 쓰지 않는다 |
+| `prefers-reduced-motion`은 기본 범위 | **적용 안 함.** 아래 대시보드 완성 기준의 「움직임 줄이기」를 쓴다 |
 
-나머지(스택, GSAP 사용법, 렌더링 기본값 SVG, 범위 밖 금지 목록, 접근성, 작업 단위)는 그대로 적용한다. 기록 규율의 "주장마다 원문 근거"는 계획 문서(`docs/terms/`)에만 적용하고, **대시보드 화면에는 출처를 표시하지 않는다**(사용자 결정, 2026-11-22).
+나머지(스택, GSAP 사용법, 렌더링 기본값 SVG(3D 데모 제외), 범위 밖 금지 목록(Three.js, 3D 제외), 접근성(reduced motion 제외), 작업 단위)는 그대로 적용한다. 기록 규율의 "주장마다 원문 근거"는 계획 문서(`docs/terms/`)에만 적용하고, **대시보드 화면에는 출처를 표시하지 않는다**(사용자 결정, 2026-11-22).
 
 ### shadcn/ui
 
@@ -246,14 +249,14 @@ UI 섹션 카드의 데모는 **shadcn/ui 컴포넌트를 그대로 쓴다.** �
 
 - 설치는 CLI로 한다: `pnpm dlx shadcn@latest add <name>`. `components.json`의 aliases는 `src/terms/` 아래를 가리키게 한다
 - 허용하는 의존성은 **`shadcn add`가 그 컴포넌트를 위해 설치하는 것까지**다. 예: primitive 라이브러리(`@base-ui/react`, `@shadcn/react`), `lucide-react`, `class-variance-authority`, `cn`, Carousel의 `embla-carousel-react`, Chart의 `recharts`. 그 밖의 라이브러리는 대시보드에서도 조건부 표 규칙을 따른다
-- **Motion·Style 섹션의 데모는 GSAP·CSS로 직접 만든다.** shadcn 컴포넌트에 원래 들어 있는 CSS transition은 그대로 둔다. Motion(구 Framer Motion)이나 confetti 라이브러리는 여전히 금지다
+- **Motion·Camera·Edit·Look·Style 섹션의 데모는 GSAP·CSS로 직접 만든다** (3D가 필요하면 위 표의 Three.js + `@react-three/fiber`). shadcn 컴포넌트에 원래 들어 있는 CSS transition은 그대로 둔다. Motion(구 Framer Motion)이나 confetti 라이브러리는 여전히 금지다
 - **에세이 코드(`src/connection-pool/`)는 shadcn 컴포넌트를 import하지 않는다.** 두 결과물이 서로의 규칙을 오염시키지 않게 한다
 - 자기 전용 shadcn registry(`registry.json` + `shadcn build`)는 대시보드 컴포넌트를 **다른 프로젝트에서 실제로 다시 쓰게 될 때** 만든다. 그 전에는 만들지 않는다
 
 ### 대시보드 완성 기준
 
 - **의미**: 카드의 정의·요청 예문과 데모가 같은 것을 보여 준다. 비교 데모(예: Spring vs Bounce)는 차이가 색 이외의 표식과 텍스트로도 구분된다
-- **움직임 줄이기**: `prefers-reduced-motion: reduce`이면 모든 데모가 정지된 전/후 상태로 같은 내용을 보여 준다
+- **움직임 줄이기**: UI·Style 카드는 지금의 정지 화면을 유지한다. Motion·Camera·Edit·Look의 reduced motion 대응은 나중에 넣는다
 - **조작**: 데모는 보는 사람이 시작한다(hover·클릭·스크롤·다시 재생). hover로 시작하는 데모는 키보드 focus로도 시작된다. Pin·Scroll 데모에서 키보드 사용자가 갇히지 않는다
 - **모바일**: 모든 카드의 설명에 도달할 수 있다. 포인터 전용 데모(Magnetic Button, Custom Cursor, 3D Tilt)는 터치 기기에서 꺼지고, 대신 설명이 보인다
 

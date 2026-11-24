@@ -8,13 +8,11 @@
 | Structure | Montage, Cross-cutting, Split Screen, Insert Shot, Flashback | 5 |
 | Time | Time-lapse, Speed Ramp, Freeze Frame, Hyperlapse, Bullet Time, Stop Motion | 6 |
 
-영상 출처: 3탄 = https://www.youtube.com/watch?v=RHXioQ2WjN0  
-요청 공식 (3탄 24:48): **효과 이름 + 대상 + 방식** (`effect name + what to apply it to + how`)
+요청 공식 : **효과 이름 + 대상 + 방식** (`effect name + what to apply it to + how`)
 
 **이 섹션 데모의 공통점**
 - **2패널 무대**: 위에 **카메라 화면**, 아래에 **타임라인(클립 배열·속도 그래프·오디오 레벨)**을 나란히 두어 편집 원리를 눈으로 확인한다. 2D SVG + GSAP + CSS만으로 구현한다.
 - 모든 데모에 **"다시 재생"** 버튼을 둔다.
-- **Reduced Motion**: 시간 변화·전환 카드는 영상이 쓴 정적 도식(타임라인 클립 배열, 속도 그래프, 오디오 레벨, 프레임 스트립)으로 대체한다. `Whip Pan`은 전정 자극 대상이라 reduce 상태에서 재생을 차단한다.
 
 ---
 
@@ -28,7 +26,6 @@
   - 촬영·편집 — 동일 앵글 클립 중간 삭제(컷 편집)
   - 웹 데모 — `duration: 0`의 즉각 상태 전환(`gsap.set()`), 타임라인 갭 시각화
 - **관계**: 연속 편집(Continuity Editing)의 의도적 위반
-- **출처**: 3탄 8:51~9:16
 
 ### Dissolve
 - **무엇**: 앞 장면이 서서히 투명해지며 사라지는 동시에 다음 장면이 겹쳐지며 나타나는 전환이다. 낮에서 저녁으로 시간이 부드럽게 흘렀음을 알릴 때 쓴다.
@@ -38,7 +35,6 @@
   - 촬영·편집 — 편집 툴 Cross Dissolve 트랜지션
   - 웹 데모 — 두 SVG 장면의 `opacity` 교차(`1→0` / `0→1`), GSAP `timeline` 동시 배치(`"<"`)
 - **관계**: Cross Dissolve = 별칭. `Motion · Fade`가 구성 요소(두 층의 opacity 교차). `Fade to Black`과 비교(Dissolve는 두 장면이 겹치고, Fade to Black은 완전한 검정을 거침)
-- **출처**: 3탄 9:16~9:51
 
 ### Wipe
 - **무엇**: 경계선이 화면을 쓸고 지나가며 앞 장면을 밀어내고 다음 장면을 드러내는 전환이다. 직선·대각선·원형 등 다양한 모양이 있으며 두 장면이 겹치지 않는다.
@@ -48,7 +44,6 @@
   - 촬영·편집 — 편집 툴 Linear / Clock / Barn Door Wipe
   - 웹 데모 — CSS `clip-path: polygon(...)` 또는 `inset()`, GSAP `to()`
 - **관계**: `Motion · Page Transition`의 Wipe와 **같은 이름, 다른 대상**(웹 페이지 덮기 vs 영상 컷 전환). `Iris (In / Out)` = 원형 Wipe 변형
-- **출처**: 3탄 9:51~10:06
 
 ### Match Cut
 - **무엇**: 형태나 움직임이 닮은 두 장면을 같은 위치·크기로 이어 붙여, 장면이 바뀌어도 시선이 자연스럽게 흐르게 하는 전환이다. 모양이 이어지는 **Graphic Match**와 동작이 이어지는 **Match on Action** 두 갈래가 있다.
@@ -58,17 +53,14 @@
   - 촬영·편집 — 앞뒤 숏의 구도·형태·동작 궤적 정렬 후 컷
   - 웹 데모 — 동일 좌표·반지름 SVG 요소 간 컷 전환 + 정렬 가이드 표시
 - **관계**: Graphic Match / Match on Action = 변형. `Motion · Shared Element Transition`과는 **비유로만** 연결(Shared Element는 같은 요소, Match Cut은 다른 요소가 형태만 닮음)
-- **출처**: 3탄 10:06~10:28 *(Graphic Match / Match on Action 구분은 Film Art 등 표준 교재 기준, 작성 시 출처 확인)*
 
 ### Whip Pan *(카메라 무브이나 영상 전환 분류 유지)*
 - **무엇**: 카메라를 순식간에 옆으로 확 돌려 화면이 완전히 번지는(motion blur) 찰나에 컷을 숨겨 다음 장면으로 넘기는 전환이다. 경쾌한 브이로그나 액션 장면에 쓴다.
-- **데모**: 옥상 장면 → 강한 가로 블러 프레임(숨긴 컷 지점 표시) → 골목 장면으로 빠르게 넘어간다. Reduced Motion에서는 재생을 차단하고 3단계 프레임 스트립(장면 A / 블러 컷 지점 / 장면 B)만 보여 준다.
-- **요청 예문**: "옥상 장면에서 골목 장면으로 빠른 Whip Pan으로 전환."
+- **데모**: 옥상 장면 → 강한 가로 블러 프레임(숨긴 컷 지점 표시) → 골목 장면으로 빠르게 넘어간다.- **요청 예문**: "옥상 장면에서 골목 장면으로 빠른 Whip Pan으로 전환."
 - **구현**:
   - 촬영·편집 — 촬영 시 고속 팬 + 블러 프레임 중간 컷 연결
   - 웹 데모 — 고속 `translateX` + `feGaussianBlur stdDeviation="24 0"`, GSAP `timeline`
 - **관계**: Swish Pan = 별칭. `Camera · Pan / Tilt`의 고속 변형. `Camera · Motion Blur`가 컷을 숨기는 원리
-- **출처**: 3탄 10:28~10:54
 
 ### Smash Cut
 - **무엇**: 조용하고 느린 장면을 예고 없이 시끄럽고 혼란스러운 장면으로 뚝 끊어 넘기는 급격한 컷이다. 정적과 소음의 대비로 유머나 충격을 만든다.
@@ -78,7 +70,6 @@
   - 촬영·편집 — 페이드·완충 없는 즉각 컷 + 오디오 레벨 급대비
   - 웹 데모 — 0ms 장면 교체 + SVG 오디오 파형 막대 급상승 시각화
 - **관계**: `J-Cut / L-Cut`(부드러운 오디오 선행/후행 연결)과 대비
-- **출처**: 3탄 10:54~11:17
 
 ### Iris (In / Out) *(표제 보강, 원제 Iris)*
 - **무엇**: 화면 앞의 둥근 구멍이 좁아지며 장면을 닫거나(Iris Out), 넓어지며 장면을 여는(Iris In) 전환이다. 고전 무성영화나 만화 엔딩에 자주 쓰인다.
@@ -88,7 +79,6 @@
   - 촬영·편집 — 카메라 아이리스 매트 또는 편집 툴 Circle / Iris Wipe
   - 웹 데모 — CSS `clip-path: circle(0% at 50% 50%)` ↔ `circle(75% at 50% 50%)`, GSAP `to()`
 - **관계**: Iris Wipe = 별칭. `Wipe`의 원형 변형. `README` 후속 후보 `Mask / Clip Reveal`과 구현 공유(`clip-path: circle()`)
-- **출처**: 3탄 11:17~11:47
 
 ### Fade to Black *(표제 변경, 원제 Fade Out)*
 - **무엇**: 화면이 서서히 어두워져 완전한 검정으로 사라졌다가(Fade Out), 다음 장면이 검정에서 밝아지며 나타나는(Fade In) 전환이다. 하루나 한 장(chapter)의 끝과 시작을 알린다.
@@ -98,7 +88,6 @@
   - 촬영·편집 — Dip to Black / Fade Out·Fade In 트랜지션
   - 웹 데모 — 검정 오버레이 `opacity: 0 → 1 → 0`, GSAP `timeline`
 - **관계**: Fade In / Fade Out = 별칭. Fade to White = 변형. `Motion · Fade`(UI 요소 투명도) 및 `Dissolve`(두 장면 겹침)와 **같은 이름, 다른 대상**
-- **출처**: 3탄 11:47~12:07
 
 ### J-Cut / L-Cut *(추가)*
 - **무엇**: 화면(비디오)과 소리(오디오)의 전환 시점을 어긋나게 편집하는 분할 컷(Split Edit)이다. 다음 장면의 소리가 먼저 들리면 **J-Cut**, 앞 장면의 소리가 다음 화면 위로 이어지면 **L-Cut**이라 부른다(타임라인 모양에서 유래).
@@ -108,7 +97,6 @@
   - 촬영·편집 — Adobe Premiere Pro·DaVinci Resolve에서 Video/Audio 링크 해제 후 트랙 경계 개별 트림(Split Edit)
   - 웹 데모 — 2트랙 SVG 타임라인 + 오디오 파형 활성 구간 시각화(`Smash Cut`과 같은 오디오 도식 문법)
 - **관계**: Split Edit = 별칭. `Smash Cut`과 대비(부드러운 청각 브리지 vs 급격한 단절)
-- **출처**: Adobe Premiere Pro 공식 문서 — J-cut and L-cut (Split Edit) *(작성 시 직접 URL 열람 검증 필요)*
 
 ---
 
@@ -122,7 +110,6 @@
   - 촬영·편집 — 짧은 핵심 컷 연속 배열 + 음악/리듬 동기화
   - 웹 데모 — 짧은 장면 시퀀스 GSAP `timeline` + 타임라인 4클립 진행 표시
 - **관계**: Montage Sequence = 별칭
-- **출처**: 3탄 12:07~12:51 *(할리우드 montage sequence 구분은 표준 교재 기준, 작성 시 출처 확인)*
 
 ### Cross-cutting
 - **무엇**: 서로 다른 장소에서 **동시에** 벌어지는 두 사건을 번갈아 보여 주는 편집이다. 후반으로 갈수록 각 컷의 길이를 짧게 줄이면 긴박감이 급격히 높아진다.
@@ -132,7 +119,6 @@
   - 촬영·편집 — 두 시퀀스 교차 배치 + 클립 길이 점진 축소
   - 웹 데모 — 점차 짧아지는 duration으로 A/B SVG 장면 교차, GSAP `timeline`
 - **관계**: Parallel Editing = 별칭(엄밀히는 동시 진행 사건은 Cross-cutting, 시간대가 달라도 병렬 대비하면 Parallel Editing)
-- **출처**: 3탄 12:51~13:27
 
 ### Split Screen
 - **무엇**: 하나의 프레임을 둘 이상으로 분할해 서로 다른 장소의 장면을 동시에 보여 준다. 컷을 넘기지 않고도 두 인물의 표정이나 행동을 한눈에 비교할 수 있다.
@@ -142,7 +128,6 @@
   - 촬영·편집 — 두 클립 크롭·위치 배치(분할 레이아웃)
   - 웹 데모 — CSS Grid 2분할 컨테이너 안에 독립 SVG 장면 2개 동시 배치
 - **관계**: `Cross-cutting`과 비교(시간적 교차 vs 공간적 동시 배치)
-- **출처**: 3탄 13:27
 
 ### Insert Shot
 - **무엇**: 진행 중인 장면 중간에 이야기상 중요한 작은 사물(시계·열쇠·편지 등)의 클로즈업을 짧게 끼워 넣어 핵심 정보를 즉각 전달하고 본 장면으로 돌아오는 샷이다.
@@ -152,7 +137,6 @@
   - 촬영·편집 — 본 장면 안의 핵심 소품 클로즈업 1컷 삽입
   - 웹 데모 — 메인 SVG 장면 중간에 짧은 시계 클로즈업 컷 삽입, GSAP `timeline`
 - **관계**: `Cutaway`와 구분(Insert Shot은 **현재 장면 안**의 사물, Cutaway는 장면 밖의 대상). `Camera · Shot Size`(Close-up / ECU)의 서사적 활용
-- **출처**: 3탄 13:27~13:53 *(Cutaway 구분은 표준 교재 기준, 작성 시 출처 확인)*
 
 ### Flashback
 - **무엇**: 현재 이야기 흐름 속에 과거의 기억 장면을 끼워 넣는 서사 편집 장치다. 바랜 색감이나 흐린 가장자리는 정의 자체가 아니라 과거임을 알리는 시각적 **표시 관습**이다.
@@ -162,7 +146,6 @@
   - 촬영·편집 — 과거 컷 삽입 + 색보정·비네팅·디졸브 등 시간 경계 표식
   - 웹 데모 — `filter: sepia(0.5) contrast(0.9)` + 비네팅 오버레이 전환
 - **관계**: `Look · Color Grading`, `Look · Vignette` = 과거를 표시하는 대표 관습
-- **출처**: 3탄 13:53~14:19
 
 ---
 
@@ -176,7 +159,6 @@
   - 촬영·편집 — 인터벌 촬영(예: 2~3분당 1프레임) 후 24/30fps 재생
   - 웹 데모 — 해/구름/시곗바늘 SVG 속성 고속 보간, GSAP `timeline.timeScale()`
 - **관계**: `Hyperlapse` = 카메라가 이동하며 찍는 변형. **Slow Motion** *(이미 알아 제외, 검색어 연결)*과 반대 방향(압축 vs 확장). `Motion · Timeline`(`timeScale()`)이 구현 API
-- **출처**: 3탄 14:56~15:20
 
 ### Speed Ramp
 - **무엇**: 하나의 연속된 숏 안에서 재생 속도를 빠르게 달리다가 결정적인 순간만 부드럽게 느려지고 다시 빨라지게 바꾸는 기법이다. 속도 변화가 경사로(ramp)처럼 이어진다.
@@ -186,7 +168,6 @@
   - 촬영·편집 — Adobe Premiere Pro / After Effects `Time Remapping` + 베지에 핸들
   - 웹 데모 — GSAP `timeline` 자체의 `timeScale` 속성을 tween(`gsap.to(tl, { timeScale: 0.25 })`)
 - **관계**: Time Remapping = 편집 도구 용어. **Slow Motion** *(이미 알아 제외, 검색어 연결)*으로 부드럽게 진입·이탈하는 응용. `Motion · Timeline`이 구현 API
-- **출처**: 3탄 15:20~15:46, Adobe Premiere Pro 공식 문서 — Time Remapping *(작성 시 직접 URL 열람 검증 필요)*
 
 ### Freeze Frame
 - **무엇**: 움직이던 영상의 한 프레임을 갑자기 멈춰 정지 사진처럼 몇 초간 유지한다. 인물 소개나 결정적 순간 강조에 쓰며, 멈춘 화면 옆에 이름·화살표를 붙이기도 한다.
@@ -196,7 +177,6 @@
   - 촬영·편집 — 편집 툴 Frame Hold(단일 프레임 연장)
   - 웹 데모 — GSAP `tl.pause()` 시점에 콜아웃 SVG 라벨 표시
 - **관계**: `Bullet Time`의 구성 요소(시간 정지 + 카메라 공전). `Motion · Timeline`(`pause()`)이 구현 API
-- **출처**: 3탄 15:46~16:18
 
 ### Hyperlapse
 - **무엇**: 카메라를 고정하지 않고 한 걸음씩 앞으로 이동하면서 찍는 타임랩스다. 시간의 흐름과 공간의 이동이 동시에 빠르게 흐르며, 여행 영상에서 자주 쓴다.
@@ -206,7 +186,6 @@
   - 촬영·편집 — 일정 보폭 이동 + 기준점 정렬 인터벌 촬영 + 후반 안정화
   - 웹 데모 — 전진 원근 이동 + 하늘 색온도 고속 변화, GSAP `timeline`
 - **관계**: `Time-lapse`의 카메라 이동 변형
-- **출처**: 3탄 16:29~16:54
 
 ### Bullet Time
 - **무엇**: 시간이 거의 멈춘 찰나에 카메라만 피사체 주위를 빙글 돌아, 공중에 떠 있는 순간을 여러 각도에서 보여 주는 효과다. 영화 *매트릭스*로 유명해졌다.
@@ -216,7 +195,6 @@
   - 촬영·편집 — 원형 다중 카메라 배열 순차 촬영(Time-slice) 또는 고속 카메라 + CG 보간
   - 웹 데모 — 캐릭터 정지(`pause`) + `Arc Shot` 배경 파노라마 회전, GSAP `timeline`
 - **관계**: Time-slice Photography = 일반 기술명. `Freeze Frame` + `Camera · Arc Shot`이 구성 요소. **Slow Motion** *(이미 알아 제외, 검색어 연결)*의 극단적 시간 감속과 연결
-- **출처**: 3탄 16:54~17:15
 
 ### Stop Motion
 - **무엇**: 정지된 물체를 조금씩 움직여 한 장씩 사진을 찍어 이어 붙이는 애니메이션 기법이다. 초당 약 12장 수준의 뚝뚝 끊기는 움직임이 수작업의 따뜻한 질감을 만든다.
@@ -226,4 +204,3 @@
   - 촬영·편집 — 프레임 단위 수동 배치 촬영(24fps 기준 2프레임당 1컷 = `shooting on twos`)
   - 웹 데모 — CSS `steps()` 또는 GSAP `ease: "steps(12)"`
 - **관계**: `Motion · Easing`의 계단형(`steps`) 타이밍과 구현 연결
-- **출처**: 3탄 17:15~17:57

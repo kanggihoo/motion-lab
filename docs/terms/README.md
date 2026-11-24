@@ -15,13 +15,13 @@
 | 섹션 | 파일 | 다루는 것 | 카드 수 |
 |---|---|---|---|
 | UI | [ui.md](ui.md) | 어떤 화면과 상태를 만드는가 | 91 |
-| Motion | [motion.md](motion.md) | 무엇이 언제 어떻게 움직이는가 | 33 |
+| Motion | [motion.md](motion.md) | 무엇이 언제 어떻게 움직이는가 | 32 |
 | Style | [style.md](style.md) | 화면이 어떤 시각 규칙을 따르는가 | 5 |
 | Camera | [camera.md](camera.md) | 촬영할 때 무엇을 어떻게 담는가(무브·앵글·렌즈) | 26 |
 | Edit | [edit.md](edit.md) | 숏을 어떻게 잇고 시간의 흐름을 어떻게 바꾸는가 | 20 |
 | Look | [look.md](look.md) | 완성 화면의 색·빛·질감 | 7 |
 
-합계 182장. 출발점은 영상 3편의 용어 98개(1탄 UI 24 + 2탄 Motion 24 + 3탄 영상 기법 50)다.
+합계 181장. 출발점은 영상 3편의 용어 98개(1탄 UI 24 + 2탄 Motion 24 + 3탄 영상 기법 50)다.
 
 **섹션을 새로 붙이는 방법**: 파일 하나(`camera.md`)를 만들고 이 표에 한 줄을 추가한다. 다른 섹션과 개념이 겹치면 카드의 "관계" 줄에 적는다(아래 연결 메모 참고).
 
@@ -59,7 +59,7 @@
    - 통과 예: "카드를 Masonry로" vs "카드를 Grid로" → 결과 배치가 다르다
    - 탈락 예: Rotate → "90° 회전"은 이름 없이도 같은 요청이다
 2. **출처 필수.** 영상 용어는 타임스탬프를, 영상 밖에서 추가한 용어는 원문 링크(웹: MDN, W3C, WAI-ARIA APG, 디자인 시스템 문서 / 영상: ASC 자료, Adobe·Blackmagic·Apple 공식 매뉴얼, 영화학 교재 *Film Art*)를 단다. 출처를 달 수 없는 용어는 넣지 않는다. 출처는 이 계획 문서에만 두고 대시보드 화면에는 표시하지 않는다.
-3. **Reduced Motion은 모든 데모에 적용한다.** `prefers-reduced-motion: reduce`이면 비필수 움직임을 멈추고, 정적인 전/후 상태로 같은 내용을 보여 준다. "재생" 버튼만 두는 것으로는 부족하다(`AGENTS.md` 접근성 항목).
+3. **Reduced Motion 대응은 UI·Style 카드에만 있다.** Motion·Camera·Edit·Look은 나중에 넣는다(2026-11-24).
 4. **데모는 보는 사람이 시작한다.** 자동 반복 재생 대신 hover·클릭·스크롤·"다시 재생" 버튼으로 시작한다. 카드 여러 장이 한 화면에서 동시에 움직이면 무엇을 봐야 할지 알 수 없다.
 5. **데모는 키보드로도 조작할 수 있어야 한다.** hover로 시작하는 데모는 focus로도 시작되게 한다.
 
@@ -72,7 +72,6 @@
 | Scroll Scrub | `src/connection-pool/Scrolly.tsx:136` — `scrollTrigger: { scrub }` |
 | Pin | `src/connection-pool/Scrolly.tsx:158` — 다이어그램을 `sticky top-0`으로 고정 |
 | Scrollytelling | `src/connection-pool/Scrolly.tsx` 전체 — 스크롤에 따라 단계 카드가 바뀜 |
-| Reduced Motion | `src/connection-pool/Scrolly.tsx:125` — `gsap.matchMedia()`로 단계별 정지 화면 |
 | Easing | `src/connection-pool/sim.ts:40`, `:66` |
 
 대시보드에 적용되는 규칙(에세이 규칙의 예외, shadcn/ui 허용 범위, 대시보드 완성 기준)은 `AGENTS.md`의 「용어 대시보드」 절에 있다.
@@ -156,5 +155,5 @@
   - 이 저장소에 둔다
 - 토의 원본은 `.herdr-discuss/20261122-0203-ui-motion-terms/summary.md`에 있다. git에서는 제외되어 로컬에만 있다.
 - 2026-11-22: `style.md`에서 출처를 모두 삭제했다(사용자 결정). 위 규칙 2의 "출처 필수"는 Style 섹션에 적용하지 않는다.
-- 외부 출처 링크는 토의 중에 일부만 직접 열람했다. 카드를 구현할 때 링크마다 다시 확인한다.
 - 2026-11-23: agy·Claude(`opus`, effort `medium`) 토의(6턴)로 3탄 영상 50개의 `camera.md`·`edit.md`·`look.md` 3파일 분리, 표제·정의 보정, 신규 7장 추가를 합의했다. 사용자 결정으로 이미 아는 2장(`Zoom In`, `Slow Motion`)을 제외해 53장(전체 182장)으로 확정했다. 토의 원본은 `.herdr-discuss/20261123-1922-video-terms/summary.md`에 있다.
+- 2026-11-24: Motion·Camera·Edit·Look의 reduced motion 대응을 나중으로 미루고 Reduced Motion 카드를 제거했다(사용자 결정). 전체 181장.
