@@ -1,6 +1,6 @@
 import type { TermSection } from './types'
 
-const sectionOrder = ['ui', 'motion', 'style']
+const sectionOrder = ['ui', 'motion', 'style', 'camera', 'edit', 'look']
 
 function order(id: string) {
   const position = sectionOrder.indexOf(id)
@@ -12,11 +12,20 @@ export const sections = Object.values(
     eager: true,
     import: 'default',
   }),
-).sort((left, right) => order(left.id) - order(right.id))
+)
+  .map((section) => ({
+    ...section,
+    categories: section.categories.filter((category) => category.terms.length > 0),
+  }))
+  .filter((section) => section.categories.length > 0)
+  .sort((left, right) => order(left.id) - order(right.id))
 
 const plannedSections = [
   { id: 'motion', name: 'Motion' },
   { id: 'style', name: 'Style' },
+  { id: 'camera', name: 'Camera' },
+  { id: 'edit', name: 'Edit' },
+  { id: 'look', name: 'Look' },
 ]
 
 export const sectionOptions = [

@@ -14,7 +14,9 @@ export interface Term {
   details?: string[]
   whenToUse: string
   request: string
+  filmmaking?: string
   implementation: string
+  repoExample?: string
   relations: TermRelation[]
   related?: { names: string[]; description: string }
   shadcn?: { name: string; command: string; note?: string }[]

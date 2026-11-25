@@ -40,10 +40,29 @@ export function TermCard({ term, Demo, selected, renderRelated }: {
       </div>
 
       <dl className="mt-4 grid gap-3 text-sm leading-relaxed">
-        <div>
-          <dt className="card-label">구현</dt>
-          <dd className="mt-1 text-slate-700">{formatText(term.implementation)}</dd>
-        </div>
+        {term.filmmaking ? (
+          <>
+            <div>
+              <dt className="card-label">촬영·편집</dt>
+              <dd className="mt-1 text-slate-700">{formatText(term.filmmaking)}</dd>
+            </div>
+            <div>
+              <dt className="card-label">웹 데모 구현</dt>
+              <dd className="mt-1 text-slate-700">{formatText(term.implementation)}</dd>
+            </div>
+          </>
+        ) : (
+          <div>
+            <dt className="card-label">구현</dt>
+            <dd className="mt-1 text-slate-700">{formatText(term.implementation)}</dd>
+          </div>
+        )}
+        {term.repoExample && (
+          <div>
+            <dt className="card-label">이 저장소의 예</dt>
+            <dd className="mt-1 text-slate-700">{formatText(term.repoExample)}</dd>
+          </div>
+        )}
         {term.shadcn && (
           <div>
             <dt className="card-label">shadcn/ui</dt>
