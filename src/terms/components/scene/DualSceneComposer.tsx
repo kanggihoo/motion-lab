@@ -10,6 +10,7 @@ import {
   type LookPostEffect,
   type WipeShape,
 } from './look-post'
+import { DEFAULT_CAMERA } from './scene-layout'
 
 interface CameraSpec {
   position: [number, number, number]
@@ -33,12 +34,6 @@ interface DualSceneComposerProps {
   wipeShape?: WipeShape
   /** 가로 블러 폭(화면 너비 비율) */
   blurRef?: RefObject<number>
-}
-
-const DEFAULT_CAMERA: CameraSpec = {
-  position: [0.1, 1.65, 5.8],
-  lookAt: [0, 1.0, 0],
-  fov: 42,
 }
 
 function configureCamera(cam: THREE.PerspectiveCamera, spec: CameraSpec, aspect: number) {

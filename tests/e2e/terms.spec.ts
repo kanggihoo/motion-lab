@@ -138,7 +138,7 @@ test('Existing UI/Style hashes, Reduced Motion isolation, and Search filtering',
   await searchInput.fill('Letterbox')
   await expect(page.getByRole('option', { name: /Letterbox/ })).toBeVisible()
 
-  await searchInput.fill('Arc Shot')
+  await searchInput.fill('Typewriter')
   await expect(page.getByText('검색 결과가 없습니다.')).toBeVisible()
 
   expect(errors).toEqual([])

@@ -1,6 +1,19 @@
 import type { ReactNode } from 'react'
 import * as THREE from 'three'
 import { TIME_PALETTES, pickColor, type TimeOfDay, type TimePalette } from './scene-colors'
+import {
+  CLOUDS,
+  FENCE,
+  GRASS_TUFTS,
+  GROUND,
+  HERO,
+  HILLS,
+  NIGHT_LIGHTS,
+  NIGHT_LIGHT_Y,
+  OTHER,
+  SWING,
+  TREES,
+} from './scene-layout'
 
 /** 주인공의 자세. 'run'은 상체를 숙이고, 'jump'는 다리를 고정된 각도로 접어 벌린다. */
 export type HeroPose = 'stand' | 'run' | 'jump'
@@ -23,12 +36,6 @@ export interface SharedSceneProps {
   /** 카드별 소품 슬롯(D-5: 최대 1개) */
   prop?: ReactNode
 }
-
-const NIGHT_LIGHTS: [number, number, number][] = [
-  [-3.1, 0, -5.8],
-  [0.8, 0, -7.8],
-  [3.9, 0, -6.5],
-]
 
 const VOLUMETRIC_BEAMS: { pos: [number, number, number]; rotZ: number; width: number }[] = [
   { pos: [-2.6, 3.6, -4.6], rotZ: -0.45, width: 1.05 },
@@ -94,7 +101,7 @@ export function SharedScene({
   palette,
   cloudOffset = 0,
   heroPose = 'stand',
-  heroPosition = [0, 0, 0],
+  heroPosition = HERO.position,
   heroYaw = 0,
   heroStride = 0,
   hideHero = false,
@@ -121,8 +128,8 @@ export function SharedScene({
       />
 
       {/* Ground */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -4]}>
-        <planeGeometry args={[52, 46]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={GROUND.position}>
+        <planeGeometry args={GROUND.size} />
         <meshStandardMaterial color={c(p.ground)} roughness={0.95} />
       </mesh>
 
@@ -132,7 +139,7 @@ export function SharedScene({
         <meshBasicMaterial color={c(p.sun)} />
       </mesh>
 
-      <group position={[-4.5 + cloudOffset, 6.4, -15]}>
+      <group position={[CLOUDS[0][0] + cloudOffset, CLOUDS[0][1], CLOUDS[0][2]]}>
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.85, 12, 12]} />
           <meshStandardMaterial color={c(p.cloud)} roughness={1} />
@@ -147,7 +154,7 @@ export function SharedScene({
         </mesh>
       </group>
 
-      <group position={[3.2 + cloudOffset, 7.1, -16]}>
+      <group position={[CLOUDS[1][0] + cloudOffset, CLOUDS[1][1], CLOUDS[1][2]]}>
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.75, 12, 12]} />
           <meshStandardMaterial color={c(p.cloud)} roughness={1} />
@@ -158,23 +165,23 @@ export function SharedScene({
         </mesh>
       </group>
 
-      <mesh position={[-5.2, -1.3, -12.5]} scale={[7.2, 2.8, 3.2]}>
-        <sphereGeometry args={[1, 20, 14]} />
-        <meshStandardMaterial color={c(p.hillNear)} roughness={0.95} />
-      </mesh>
-      <mesh position={[5.6, -1.4, -13.5]} scale={[7.8, 3.0, 3.4]}>
-        <sphereGeometry args={[1, 20, 14]} />
-        <meshStandardMaterial color={c(p.hillNear)} roughness={0.95} />
-      </mesh>
-      <mesh position={[0.3, -1.8, -16]} scale={[12.5, 3.8, 4.0]}>
-        <sphereGeometry args={[1, 24, 16]} />
-        <meshStandardMaterial color={c(p.hillFar)} roughness={0.95} />
-      </mesh>
+      {HILLS.map((hill, index) => (
+        <mesh key={index} position={hill.position} scale={hill.radii}>
+          <sphereGeometry args={index === 2 ? [1, 24, 16] : [1, 20, 14]} />
+          <meshStandardMaterial color={c(hill.tone === 'far' ? p.hillFar : p.hillNear)} roughness={0.95} />
+        </mesh>
+      ))}
 
-      <Tree position={[-4.2, 0, -5.2]} scale={1.15} trunk={c(p.trunk)} dark={c(p.treeDark)} light={c(p.treeLight)} />
-      <Tree position={[-1.9, 0, -7.2]} scale={1.35} trunk={c(p.trunk)} dark={c(p.treeDark)} light={c(p.treeLight)} />
-      <Tree position={[2.6, 0, -6.2]} scale={1.25} trunk={c(p.trunk)} dark={c(p.treeDark)} light={c(p.treeLight)} />
-      <Tree position={[5.2, 0, -8.5]} scale={1.4} trunk={c(p.trunk)} dark={c(p.treeDark)} light={c(p.treeLight)} />
+      {TREES.map((tree, index) => (
+        <Tree
+          key={index}
+          position={tree.position}
+          scale={tree.scale}
+          trunk={c(p.trunk)}
+          dark={c(p.treeDark)}
+          light={c(p.treeLight)}
+        />
+      ))}
 
       {/* Night distant lights */}
       {timeOfDay === 'night' &&
@@ -184,11 +191,11 @@ export function SharedScene({
               <cylinderGeometry args={[0.04, 0.05, 2.3, 6]} />
               <meshStandardMaterial color={c('#334155')} roughness={0.8} />
             </mesh>
-            <mesh position={[0, 2.35, 0]}>
+            <mesh position={[0, NIGHT_LIGHT_Y, 0]}>
               <sphereGeometry args={[0.16, 12, 12]} />
               <meshBasicMaterial color={c('#fde68a')} />
             </mesh>
-            <mesh position={[0, 2.35, 0]}>
+            <mesh position={[0, NIGHT_LIGHT_Y, 0]}>
               <sphereGeometry args={[0.42, 12, 12]} />
               <meshBasicMaterial color={c('#fef3c7')} transparent opacity={0.28} depthWrite={false} />
             </mesh>
@@ -225,7 +232,7 @@ export function SharedScene({
             <cylinderGeometry args={[0.24, 0.32, 0.72, 12]} />
             <meshStandardMaterial color={p.heroCoat} roughness={0.65} />
           </mesh>
-          <mesh position={[0, 1.54, 0]}>
+          <mesh position={[0, HERO.headY, 0]}>
             <sphereGeometry args={[0.24, 16, 16]} />
             <meshStandardMaterial color={c(p.skin)} roughness={0.7} />
           </mesh>
@@ -245,7 +252,7 @@ export function SharedScene({
       </group>
 
       {/* Second Character */}
-      <group position={[-1.55, 0, -0.45]} rotation={[0, 0.35, 0]} visible={!hideOther}>
+      <group position={OTHER.position} rotation={[0, OTHER.yaw, 0]} visible={!hideOther}>
         <mesh position={[-0.13, 0.32, 0]}>
           <cylinderGeometry args={[0.085, 0.075, 0.64, 8]} />
           <meshStandardMaterial color={c(p.pants)} roughness={0.85} />
@@ -258,7 +265,7 @@ export function SharedScene({
           <cylinderGeometry args={[0.22, 0.29, 0.68, 12]} />
           <meshStandardMaterial color={c(p.otherCoat)} roughness={0.7} />
         </mesh>
-        <mesh position={[0, 1.48, 0]}>
+        <mesh position={[0, OTHER.headY, 0]}>
           <sphereGeometry args={[0.22, 14, 14]} />
           <meshStandardMaterial color={c(p.skin)} roughness={0.7} />
         </mesh>
@@ -269,25 +276,25 @@ export function SharedScene({
       </group>
 
       {/* Foreground: Fence (left), Swing (right), Grass tufts */}
-      <group position={[-1.85, 0, 2.3]}>
-        {[-0.6, 0, 0.6].map((x) => (
-          <mesh key={x} position={[x, 0.38, 0]}>
-            <boxGeometry args={[0.1, 0.76, 0.1]} />
+      <group position={FENCE.position}>
+        {FENCE.postXs.map((x) => (
+          <mesh key={x} position={[x, FENCE.height / 2, 0]}>
+            <boxGeometry args={[FENCE.depth, FENCE.height, FENCE.depth]} />
             <meshStandardMaterial color={c(p.fence)} roughness={0.9} />
           </mesh>
         ))}
         <mesh position={[0, 0.54, 0]}>
-          <boxGeometry args={[1.45, 0.08, 0.06]} />
+          <boxGeometry args={[FENCE.width, 0.08, 0.06]} />
           <meshStandardMaterial color={c(p.fence)} roughness={0.9} />
         </mesh>
         <mesh position={[0, 0.28, 0]}>
-          <boxGeometry args={[1.45, 0.08, 0.06]} />
+          <boxGeometry args={[FENCE.width, 0.08, 0.06]} />
           <meshStandardMaterial color={c(p.fence)} roughness={0.9} />
         </mesh>
       </group>
 
       {/* Swing set */}
-      <group position={[2.05, 0, 1.85]} rotation={[0, -0.35, 0]}>
+      <group position={SWING.position} rotation={[0, SWING.yaw, 0]}>
         <mesh position={[-0.65, 0.95, 0.25]} rotation={[0.22, 0, 0]}>
           <cylinderGeometry args={[0.05, 0.055, 2.0, 8]} />
           <meshStandardMaterial color={c(p.swingFrame)} roughness={0.85} />
@@ -304,8 +311,8 @@ export function SharedScene({
           <cylinderGeometry args={[0.05, 0.055, 2.0, 8]} />
           <meshStandardMaterial color={c(p.swingFrame)} roughness={0.85} />
         </mesh>
-        <mesh position={[0, 1.9, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.055, 0.055, 1.5, 8]} />
+        <mesh position={[0, SWING.height, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.055, 0.055, SWING.width, 8]} />
           <meshStandardMaterial color={c(p.swingFrame)} roughness={0.85} />
         </mesh>
         <mesh position={[-0.22, 1.22, 0]}>
@@ -316,16 +323,15 @@ export function SharedScene({
           <cylinderGeometry args={[0.014, 0.014, 1.32, 6]} />
           <meshStandardMaterial color={c(p.fence)} roughness={0.9} />
         </mesh>
-        <mesh position={[0, 0.55, 0]}>
+        <mesh position={[0, SWING.seatY, 0]}>
           <boxGeometry args={[0.56, 0.05, 0.24]} />
           <meshStandardMaterial color={c(p.swingSeat)} roughness={0.85} />
         </mesh>
       </group>
 
-      <GrassTuft position={[-2.4, 0, 1.65]} color={c(p.grass)} />
-      <GrassTuft position={[-1.0, 0, 2.55]} color={c(p.grass)} />
-      <GrassTuft position={[1.15, 0, 2.4]} color={c(p.grass)} />
-      <GrassTuft position={[2.65, 0, 2.3]} color={c(p.grass)} />
+      {GRASS_TUFTS.map((position, index) => (
+        <GrassTuft key={index} position={position} color={c(p.grass)} />
+      ))}
 
       {prop}
     </>

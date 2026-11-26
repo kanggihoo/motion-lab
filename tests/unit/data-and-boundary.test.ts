@@ -35,8 +35,8 @@ describe('Terms Dashboard data integrity & Look section', () => {
     const allIds = new Set(
       sections.flatMap((s) => s.categories.flatMap((c) => c.terms.map((t) => t.id))),
     )
-    expect(allIds.has('arc-shot')).toBe(false)
-    expect(allIds.has('rack-focus')).toBe(false)
+    expect(allIds.has('typewriter')).toBe(false)
+    expect(allIds.has('magnetic-button')).toBe(false)
     expect(allIds.has('stagger')).toBe(false)
   })
 
