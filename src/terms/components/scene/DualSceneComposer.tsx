@@ -1,22 +1,38 @@
 import { createPortal, useFrame } from '@react-three/fiber'
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react'
 import * as THREE from 'three'
-import { DEFAULT_LOOK_POST_EFFECT, createDualComposerResources, type LookPostEffect } from './look-post'
+import {
+  COMPOSER_MODES,
+  DEFAULT_LOOK_POST_EFFECT,
+  WIPE_SHAPES,
+  createDualComposerResources,
+  type ComposerMode,
+  type LookPostEffect,
+  type WipeShape,
+} from './look-post'
 
 interface CameraSpec {
   position: [number, number, number]
   lookAt: [number, number, number]
   fov: number
+  /** 화면 폭·높이 비율 단위의 view offset. 분할 칸 중앙에 피사체를 둘 때 쓴다 */
+  viewShift?: [number, number]
 }
 
 interface DualSceneComposerProps {
   sceneA: ReactNode
   sceneB: ReactNode
-  mode: 'dissolve' | 'split'
+  mode: ComposerMode
   progressRef: RefObject<number>
   postEffectRef?: RefObject<LookPostEffect>
   cameraA?: CameraSpec
   cameraB?: CameraSpec
+  /** mode='split'의 분할 방향. 'x'는 A 왼쪽·B 오른쪽, 'y'는 A 위·B 아래 */
+  splitAxis?: 'x' | 'y'
+  /** mode='wipe'의 경계선 모양 */
+  wipeShape?: WipeShape
+  /** 가로 블러 폭(화면 너비 비율) */
+  blurRef?: RefObject<number>
 }
 
 const DEFAULT_CAMERA: CameraSpec = {
@@ -30,7 +46,13 @@ function configureCamera(cam: THREE.PerspectiveCamera, spec: CameraSpec, aspect:
   cam.fov = spec.fov
   cam.aspect = aspect
   cam.lookAt(...spec.lookAt)
-  cam.updateProjectionMatrix()
+  if (spec.viewShift) {
+    const [x, y] = spec.viewShift
+    cam.setViewOffset(aspect, 1, x * aspect, y, aspect, 1)
+  } else {
+    cam.clearViewOffset()
+    cam.updateProjectionMatrix()
+  }
 }
 
 export function DualSceneComposer({
@@ -41,6 +63,9 @@ export function DualSceneComposer({
   postEffectRef,
   cameraA = DEFAULT_CAMERA,
   cameraB = DEFAULT_CAMERA,
+  splitAxis = 'x',
+  wipeShape = 'horizontal',
+  blurRef,
 }: DualSceneComposerProps) {
   const resRef = useRef<ReturnType<typeof createDualComposerResources> | null>(null)
   if (!resRef.current) {
@@ -51,7 +76,7 @@ export function DualSceneComposer({
 
   useEffect(() => {
     if (resRef.current) {
-      resRef.current.uniforms.uMode.value = mode === 'dissolve' ? 0 : 1
+      resRef.current.uniforms.uMode.value = COMPOSER_MODES[mode]
     }
   }, [mode])
 
@@ -81,6 +106,9 @@ export function DualSceneComposer({
 
     const fx = postEffectRef?.current ?? DEFAULT_LOOK_POST_EFFECT
     res.uniforms.uProgress.value = progressRef.current
+    res.uniforms.uSplitAxis.value = splitAxis === 'y' ? 1 : 0
+    res.uniforms.uWipeShape.value = WIPE_SHAPES[wipeShape]
+    res.uniforms.uBlurX.value = blurRef?.current ?? 0
     res.uniforms.uGradePreset.value = fx.gradePreset
     res.uniforms.uDfnDarken.value = fx.dfnDarken
     res.uniforms.uDfnBlue.value = fx.dfnBlue

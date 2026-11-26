@@ -1,10 +1,27 @@
+import type { ReactNode } from 'react'
 import * as THREE from 'three'
-import { TIME_PALETTES, pickColor, type TimeOfDay } from './scene-colors'
+import { TIME_PALETTES, pickColor, type TimeOfDay, type TimePalette } from './scene-colors'
 
-interface SharedSceneProps {
+/** 주인공의 자세. 'run'은 상체를 숙이고, 'jump'는 다리를 고정된 각도로 접어 벌린다. */
+export type HeroPose = 'stand' | 'run' | 'jump'
+
+export interface SharedSceneProps {
   timeOfDay: TimeOfDay
   selectiveHero?: boolean
   volumetricDensity?: number
+  /** 시간대 사이를 보간할 때 timeOfDay의 팔레트를 대신한다. 밤 불빛은 timeOfDay가 정한다. */
+  palette?: TimePalette
+  cloudOffset?: number
+  heroPose?: HeroPose
+  heroPosition?: [number, number, number]
+  /** y축 회전(rad). 0이면 카메라(+z)를 본다. */
+  heroYaw?: number
+  /** 두 다리를 앞뒤로 벌린 각도(rad). heroPose가 'jump'면 쓰지 않는다. */
+  heroStride?: number
+  hideHero?: boolean
+  hideOther?: boolean
+  /** 카드별 소품 슬롯(D-5: 최대 1개) */
+  prop?: ReactNode
 }
 
 const NIGHT_LIGHTS: [number, number, number][] = [
@@ -70,9 +87,25 @@ function GrassTuft({ position, color }: { position: [number, number, number]; co
   )
 }
 
-export function SharedScene({ timeOfDay, selectiveHero = false, volumetricDensity = 0 }: SharedSceneProps) {
-  const p = TIME_PALETTES[timeOfDay]
+export function SharedScene({
+  timeOfDay,
+  selectiveHero = false,
+  volumetricDensity = 0,
+  palette,
+  cloudOffset = 0,
+  heroPose = 'stand',
+  heroPosition = [0, 0, 0],
+  heroYaw = 0,
+  heroStride = 0,
+  hideHero = false,
+  hideOther = false,
+  prop,
+}: SharedSceneProps) {
+  const p = palette ?? TIME_PALETTES[timeOfDay]
   const c = (hex: string) => pickColor(hex, selectiveHero)
+  // 왼쪽(side -1)·오른쪽(side 1) 다리의 엉덩이 관절 회전
+  const legRotation = (side: -1 | 1): [number, number, number] =>
+    heroPose === 'jump' ? [-0.35, 0, side * 0.45] : [side * heroStride, 0, 0]
 
   return (
     <>
@@ -99,7 +132,7 @@ export function SharedScene({ timeOfDay, selectiveHero = false, volumetricDensit
         <meshBasicMaterial color={c(p.sun)} />
       </mesh>
 
-      <group position={[-4.5, 6.4, -15]}>
+      <group position={[-4.5 + cloudOffset, 6.4, -15]}>
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.85, 12, 12]} />
           <meshStandardMaterial color={c(p.cloud)} roughness={1} />
@@ -114,7 +147,7 @@ export function SharedScene({ timeOfDay, selectiveHero = false, volumetricDensit
         </mesh>
       </group>
 
-      <group position={[3.2, 7.1, -16]}>
+      <group position={[3.2 + cloudOffset, 7.1, -16]}>
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.75, 12, 12]} />
           <meshStandardMaterial color={c(p.cloud)} roughness={1} />
@@ -178,39 +211,41 @@ export function SharedScene({ timeOfDay, selectiveHero = false, volumetricDensit
         ))}
 
       {/* Midground: Orange Hero (center) & Other Character (left) */}
-      <group position={[0, 0, 0]}>
-        <mesh position={[-0.14, 0.34, 0]}>
-          <cylinderGeometry args={[0.09, 0.08, 0.68, 8]} />
-          <meshStandardMaterial color={c(p.pants)} roughness={0.85} />
-        </mesh>
-        <mesh position={[0.14, 0.34, 0]}>
-          <cylinderGeometry args={[0.09, 0.08, 0.68, 8]} />
-          <meshStandardMaterial color={c(p.pants)} roughness={0.85} />
-        </mesh>
-        <mesh position={[0, 0.98, 0]}>
-          <cylinderGeometry args={[0.24, 0.32, 0.72, 12]} />
-          <meshStandardMaterial color={p.heroCoat} roughness={0.65} />
-        </mesh>
-        <mesh position={[0, 1.54, 0]}>
-          <sphereGeometry args={[0.24, 16, 16]} />
-          <meshStandardMaterial color={c(p.skin)} roughness={0.7} />
-        </mesh>
-        <mesh position={[0, 1.74, -0.02]}>
-          <sphereGeometry args={[0.21, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
-          <meshStandardMaterial color={p.heroHat} roughness={0.7} />
-        </mesh>
-        <mesh position={[-0.08, 1.56, 0.21]}>
-          <sphereGeometry args={[0.03, 8, 8]} />
-          <meshStandardMaterial color={c(p.hair)} />
-        </mesh>
-        <mesh position={[0.08, 1.56, 0.21]}>
-          <sphereGeometry args={[0.03, 8, 8]} />
-          <meshStandardMaterial color={c(p.hair)} />
-        </mesh>
+      <group position={heroPosition} rotation={[0, heroYaw, 0]} visible={!hideHero}>
+        <group rotation={[heroPose === 'run' ? 0.16 : 0, 0, 0]}>
+          {([-1, 1] as const).map((side) => (
+            <group key={side} position={[side * 0.14, 0.68, 0]} rotation={legRotation(side)}>
+              <mesh position={[0, -0.34, 0]}>
+                <cylinderGeometry args={[0.09, 0.08, 0.68, 8]} />
+                <meshStandardMaterial color={c(p.pants)} roughness={0.85} />
+              </mesh>
+            </group>
+          ))}
+          <mesh position={[0, 0.98, 0]}>
+            <cylinderGeometry args={[0.24, 0.32, 0.72, 12]} />
+            <meshStandardMaterial color={p.heroCoat} roughness={0.65} />
+          </mesh>
+          <mesh position={[0, 1.54, 0]}>
+            <sphereGeometry args={[0.24, 16, 16]} />
+            <meshStandardMaterial color={c(p.skin)} roughness={0.7} />
+          </mesh>
+          <mesh position={[0, 1.74, -0.02]}>
+            <sphereGeometry args={[0.21, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
+            <meshStandardMaterial color={p.heroHat} roughness={0.7} />
+          </mesh>
+          <mesh position={[-0.08, 1.56, 0.21]}>
+            <sphereGeometry args={[0.03, 8, 8]} />
+            <meshStandardMaterial color={c(p.hair)} />
+          </mesh>
+          <mesh position={[0.08, 1.56, 0.21]}>
+            <sphereGeometry args={[0.03, 8, 8]} />
+            <meshStandardMaterial color={c(p.hair)} />
+          </mesh>
+        </group>
       </group>
 
       {/* Second Character */}
-      <group position={[-1.55, 0, -0.45]} rotation={[0, 0.35, 0]}>
+      <group position={[-1.55, 0, -0.45]} rotation={[0, 0.35, 0]} visible={!hideOther}>
         <mesh position={[-0.13, 0.32, 0]}>
           <cylinderGeometry args={[0.085, 0.075, 0.64, 8]} />
           <meshStandardMaterial color={c(p.pants)} roughness={0.85} />
@@ -291,6 +326,8 @@ export function SharedScene({ timeOfDay, selectiveHero = false, volumetricDensit
       <GrassTuft position={[-1.0, 0, 2.55]} color={c(p.grass)} />
       <GrassTuft position={[1.15, 0, 2.4]} color={c(p.grass)} />
       <GrassTuft position={[2.65, 0, 2.3]} color={c(p.grass)} />
+
+      {prop}
     </>
   )
 }

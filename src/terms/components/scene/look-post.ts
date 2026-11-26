@@ -22,6 +22,11 @@ export const DEFAULT_LOOK_POST_EFFECT: LookPostEffect = {
   vignetteFeather: 0.55,
 }
 
+export const COMPOSER_MODES = { dissolve: 0, split: 1, wipe: 2 } as const
+export type ComposerMode = keyof typeof COMPOSER_MODES
+export const WIPE_SHAPES = { horizontal: 0, diagonal: 1, circle: 2 } as const
+export type WipeShape = keyof typeof WIPE_SHAPES
+
 const vertexShader = /* glsl */ `
   varying vec2 vUv;
   void main() {
@@ -35,6 +40,9 @@ const fragmentShader = /* glsl */ `
   uniform sampler2D uTexB;
   uniform float uProgress;
   uniform int uMode;
+  uniform int uSplitAxis;
+  uniform int uWipeShape;
+  uniform float uBlurX;
   uniform int uGradePreset;
   uniform float uDfnDarken;
   uniform float uDfnBlue;
@@ -98,13 +106,32 @@ const fragmentShader = /* glsl */ `
     return clamp(rgb, 0.0, 1.0);
   }
 
+  vec4 sampleBlurX(sampler2D tex, vec2 uv) {
+    if (uBlurX < 0.001) return texture2D(tex, uv);
+    vec4 sum = vec4(0.0);
+    for (int i = 0; i < 32; i++) {
+      float offset = (float(i) / 31.0 - 0.5) * uBlurX;
+      sum += texture2D(tex, vec2(uv.x + offset, uv.y));
+    }
+    return sum / 32.0;
+  }
+
+  // 0: 경계선이 먼저 지나가는 곳, 1: 마지막으로 지나가는 곳
+  float wipeDistance(vec2 uv) {
+    if (uWipeShape == 1) return (uv.x + 1.0 - uv.y) * 0.5;
+    if (uWipeShape == 2) return length((uv - 0.5) * vec2(1.6, 1.0)) / length(vec2(0.8, 0.5));
+    return uv.x;
+  }
+
   void main() {
-    vec4 colA = texture2D(uTexA, vUv);
-    vec4 colB = texture2D(uTexB, vUv);
+    vec4 colA = sampleBlurX(uTexA, vUv);
+    vec4 colB = sampleBlurX(uTexB, vUv);
     vec4 color;
     if (uMode == 0) {
       color = mix(colA, colB, clamp(uProgress, 0.0, 1.0));
-    } else if (vUv.x < uProgress) {
+    } else if (uMode == 2) {
+      color = wipeDistance(vUv) < uProgress ? colB : colA;
+    } else if (uSplitAxis == 1 ? vUv.y > 1.0 - uProgress : vUv.x < uProgress) {
       color = colA;
     } else {
       color = vec4(applyLookEffects(colB.rgb, vUv), colB.a);
@@ -115,7 +142,7 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-export function createDualComposerResources(initialMode: 'dissolve' | 'split') {
+export function createDualComposerResources(initialMode: ComposerMode) {
   const offscreenSceneA = new THREE.Scene()
   const offscreenSceneB = new THREE.Scene()
   const camA = new THREE.PerspectiveCamera(42, 16 / 10, 0.1, 100)
@@ -129,7 +156,10 @@ export function createDualComposerResources(initialMode: 'dissolve' | 'split') {
     uTexA: { value: targetA.texture },
     uTexB: { value: targetB.texture },
     uProgress: { value: 0 },
-    uMode: { value: initialMode === 'dissolve' ? 0 : 1 },
+    uMode: { value: COMPOSER_MODES[initialMode] as number },
+    uSplitAxis: { value: 0 },
+    uWipeShape: { value: 0 },
+    uBlurX: { value: 0 },
     uGradePreset: { value: 0 },
     uDfnDarken: { value: 0 },
     uDfnBlue: { value: 0 },

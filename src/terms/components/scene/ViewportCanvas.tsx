@@ -1,5 +1,12 @@
 import { Canvas } from '@react-three/fiber'
-import { useEffect, useInsertionEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  useEffect,
+  useInsertionEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react'
 import { Button } from '@terms/components/ui/button'
 import type { TimeOfDay } from './scene-colors'
 
@@ -9,6 +16,8 @@ interface ViewportCanvasProps {
   placeholderTone?: TimeOfDay
   className?: string
   camera?: { position: [number, number, number]; fov: number; near?: number; far?: number }
+  /** canvas에만 적용한다. 자리 표시와 복구 안내는 영향받지 않는다. */
+  canvasStyle?: CSSProperties
 }
 
 const PLACEHOLDER_COLORS: Record<TimeOfDay, { sky: string; hill: string; ground: string }> = {
@@ -66,6 +75,7 @@ export function ViewportCanvas({
   placeholderTone = 'day',
   className = '',
   camera = { position: [0, 1.6, 5.8], fov: 42, near: 0.1, far: 100 },
+  canvasStyle,
 }: ViewportCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef(true)
@@ -139,6 +149,7 @@ export function ViewportCanvas({
           dpr={[1, 1.5]}
           gl={{ antialias: true, powerPreference: 'default' }}
           camera={camera}
+          style={canvasStyle}
         >
           {children}
         </Canvas>
