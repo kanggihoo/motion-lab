@@ -81,6 +81,7 @@ export function ViewportCanvas({
   const activeRef = useRef(true)
   const inViewRef = useRef(false)
   const [inView, setInView] = useState(false)
+  const [onScreen, setOnScreen] = useState(false)
   const [contextLost, setContextLost] = useState(false)
   const [mountKey, setMountKey] = useState(0)
 
@@ -104,6 +105,11 @@ export function ViewportCanvas({
       { rootMargin: '250px 0px' },
     )
     observer.observe(el)
+    // 여유 거리에 미리 띄운 canvas는 실제로 화면에 보일 때까지 렌더 루프를 돌리지 않는다.
+    const screenObserver = new IntersectionObserver(([entry]) => {
+      if (entry) setOnScreen(entry.isIntersecting)
+    })
+    screenObserver.observe(el)
 
     const onLost = (event: Event) => {
       const target = event.target
@@ -121,6 +127,7 @@ export function ViewportCanvas({
     el.addEventListener('webglcontextrestored', onRestored, true)
     return () => {
       observer.disconnect()
+      screenObserver.disconnect()
       el.removeEventListener('webglcontextlost', onLost, true)
       el.removeEventListener('webglcontextrestored', onRestored, true)
     }
@@ -146,6 +153,7 @@ export function ViewportCanvas({
       {inView && !contextLost && (
         <Canvas
           key={mountKey}
+          frameloop={onScreen ? 'always' : 'never'}
           dpr={[1, 1.5]}
           gl={{ antialias: true, powerPreference: 'default' }}
           camera={camera}

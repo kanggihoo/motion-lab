@@ -15,8 +15,8 @@ import {
   TREES,
 } from './scene-layout'
 
-/** 주인공의 자세. 'run'은 상체를 숙이고, 'jump'는 다리를 고정된 각도로 접어 벌린다. */
-export type HeroPose = 'stand' | 'run' | 'jump'
+/** 주인공의 자세. 'run'은 상체를 숙이고, 'jump'는 다리를 고정된 각도로 접어 벌린다. 'swing'은 다리를 앞으로 들어 앉는다(높이는 heroPosition으로 맞춘다). */
+export type HeroPose = 'stand' | 'run' | 'jump' | 'swing'
 
 export interface SharedSceneProps {
   timeOfDay: TimeOfDay
@@ -112,7 +112,7 @@ export function SharedScene({
   const c = (hex: string) => pickColor(hex, selectiveHero)
   // 왼쪽(side -1)·오른쪽(side 1) 다리의 엉덩이 관절 회전
   const legRotation = (side: -1 | 1): [number, number, number] =>
-    heroPose === 'jump' ? [-0.35, 0, side * 0.45] : [side * heroStride, 0, 0]
+    heroPose === 'jump' ? [-0.35, 0, side * 0.45] : heroPose === 'swing' ? [-1.35, 0, 0] : [side * heroStride, 0, 0]
 
   return (
     <>
