@@ -35,5 +35,8 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
+      # 방금 올린 artifact가 deploy-pages의 조회 목록에 늦게 나타난다 (actions/deploy-pages#451).
+      # 해결되면 지운다. 실패한 run은 re-run하지 말고 새로 실행한다 (artifact가 두 개가 된다).
+      - run: sleep 60
       - id: deployment
         uses: actions/deploy-pages@v5
