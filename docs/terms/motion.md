@@ -26,7 +26,7 @@
 
 ### Fade
 - **무엇**: 투명도가 바뀌며 나타나거나(fade-in) 사라진다(fade-out). 가장 기본이고 어디에 넣어도 어색하지 않다.
-- **데모**: 모달 배경이 0.2초 fade-in. 0.2s / 0.6s / 1.2s를 비교한다.
+- **데모**: 모달 배경이 0.2초 fade-in하고, 1초 머문 뒤 같은 시간으로 fade-out한다. 0.2s / 0.6s / 1.2s를 비교한다.
 - **요청 예문**: "모달이 열릴 때 배경을 0.2초 Fade In, 닫힐 때 Fade Out."
 - **구현**: `opacity` + `transition`, GSAP `autoAlpha`(opacity와 함께 `visibility`도 바꿔서 투명한 요소가 클릭을 막지 않는다)
 - **관계**: 실무에서는 Slide와 섞어 "살짝 올라오며 나타남"으로 많이 쓴다
@@ -40,7 +40,7 @@
 
 ### Scale
 - **무엇**: 크기가 바뀐다. 커졌다가 원래대로 돌아오면 "톡 튀어나오는" **Pop**이 된다.
-- **데모**: 장바구니 배지 숫자가 pop. scale만 / pop(1 → 1.2 → 1)을 비교한다. 중심점(`transform-origin`)을 가운데와 왼쪽 위로 바꿔 볼 수 있다.
+- **데모**: 장바구니 배지가 pop. scale만(1 → 1.2에서 멈춤) / pop(1 → 1.2 → 1)을 비교한다. 중심점(`transform-origin`)을 가운데와 왼쪽 위로 바꿔 볼 수 있고, 중심점과 원래 크기 윤곽선을 표시한다.
 - **요청 예문**: "장바구니에 담으면 숫자 배지를 Scale Pop으로 강조."
 - **구현**: `transform: scale()`, `transform-origin`, GSAP `scale` + `ease: "back.out"`
 - **관계**: Pop = 변형. 튀는 느낌을 더 원하면 Spring
@@ -57,21 +57,21 @@
 - **데모**: 같은 공 4개를 linear / ease-in / ease-out / ease-in-out으로 나란히 굴린다. 각 공 옆에 속도 곡선 그래프를 그리고 진행 점이 곡선을 따라간다.
 - **요청 예문**: "메뉴가 열릴 때는 ease-out, 닫힐 때는 0.3초 ease-in."
 - **구현**: CSS `transition-timing-function`, `cubic-bezier()`, GSAP `power2.out` 등
-- **이 저장소의 예**: `src/connection-pool/sim.ts:40`, `:66`
+- **이 저장소의 예**: `src/connection-pool/Scrolly.tsx:27`, `:28`. 커넥션이 자리와 DB 사이를 옮겨 다닐 때는 `power2.inOut`, 대기열에 들어오고 화면에서 나갈 때는 `power2.out`
 - **관계**: 영상 편집의 키프레임 보간과 같은 개념(Camera·Edit 섹션의 공통 개념)
 
 ### Spring
 - **무엇**: 목표를 **살짝 지나쳤다가** 되돌아와 자리 잡는 탄성 있는 움직임이다. stiffness(뻣뻣함)와 damping(감쇠)으로 출렁임을 조절한다.
-- **데모**: 카드를 누르면 spring으로 커진다. stiffness·damping 슬라이더를 두고, 움직임 아래에 값 변화 그래프(목표선을 넘었다 돌아오는 모양)를 그린다.
+- **데모**: 카드를 누르면 spring으로 커진다. stiffness·damping 슬라이더를 두고, 움직임 아래에 값 변화 그래프(목표선을 넘었다 돌아오는 모양)를 그린다. 목표를 지나친 비율을 글자로도 보여 준다.
 - **요청 예문**: "카드를 누르면 Spring으로 살짝 커지고, 한 번만 은은하게 출렁이게."
-- **구현**: GSAP에는 물리 기반 spring이 따로 없다. `back.out`(한 번 넘어감)이나 `elastic.out`으로 근사한다. CSS는 `linear()` 함수로 spring 곡선을 직접 찍을 수 있다
+- **구현**: 감쇠 spring 공식(stiffness·damping, 질량 1)으로 계산한 값을 GSAP 사용자 지정 `ease` 함수로 쓴다. GSAP에는 물리 기반 spring이 따로 없어, 슬라이더가 필요 없으면 `back.out`(한 번 넘어감)이나 `elastic.out`으로 근사한다. CSS는 `linear()` 함수로 spring 곡선을 직접 찍을 수 있다
 - **관계**: Bounce와 비교. Spring은 목표를 *지나쳤다 돌아오고*, Bounce는 *바닥에 부딪혀 튄다*
 
 ### Bounce
 - **무엇**: 공이 바닥에 떨어져 몇 번 튀다가 멈추는 움직임이다. 귀여운 디테일에만 아껴 쓴다.
 - **데모**: 결제 완료 체크 아이콘이 위에서 떨어져 두 번 튀고 멈춘다. Spring과 나란히 둔다.
 - **요청 예문**: "결제 완료 체크 아이콘이 위에서 떨어져 Bounce 두 번 하고 멈춤."
-- **구현**: GSAP `ease: "bounce.out"`
+- **구현**: GSAP `power2.in`(낙하)과 `power2.out`(튀어 오름) tween을 이어 두 번 튀긴다. 횟수를 정하지 않아도 되면 `ease: "bounce.out"`(세 번 튄다)
 - **관계**: Spring과 비교(위 참고)
 
 ### Duration / Delay
@@ -99,7 +99,7 @@
 
 ### Keyframe *(추가)*
 - **무엇**: 움직임 중간의 **특정 시점의 상태**를 직접 찍어 두는 것이다. 예: "60% 지점에서 최대 크기, 100%에서 원래 크기".
-- **데모**: 진행 막대 위에 0% / 60% / 100% 지점을 표시한다. 점을 끌어 위치를 바꾸면 움직임이 바뀐다. 같은 시작과 끝을 transition(두 상태만)으로 했을 때와 비교한다.
+- **데모**: 진행 막대 위에 0% / 60% / 100% 지점을 표시한다. 슬라이더 손잡이를 끌어 가운데 지점(10~90%)을 옮기면 움직임이 바뀐다. 같은 시작과 끝을 transition(두 상태만)으로 했을 때와 나란히 비교한다.
 - **요청 예문**: "배지 등장은 Keyframe으로: 0%에 scale 0, 60%에 1.2, 100%에 1."
 - **구현**: CSS `@keyframes`, GSAP `keyframes: [...]` 또는 `keyframes: { "0%": ..., "60%": ... }`
 - **관계**: transition과 비교. transition은 *두 상태 사이*를 잇고 도중에 되돌릴 수 있다. keyframe animation은 *정해진 경로*를 스스로 재생한다. 영상 편집의 키프레임과 같은 개념이다
@@ -107,7 +107,7 @@
 
 ### Timeline *(추가, Orchestration 흡수)*
 - **무엇**: 여러 움직임의 **순서와 겹침**을 한 줄의 시간축에 배치하는 것이다. 예: "제목이 끝나기 0.15초 전에 부제를 시작".
-- **데모**: 트랙 3개(제목·부제·버튼)를 시간축 위의 막대로 보여 준다. 막대를 끌어 겹침을 바꾸면 즉시 재생된다. 스크러버로 시간을 앞뒤로 긁어 볼 수 있다.
+- **데모**: 트랙 3개(제목·부제·버튼)를 시간축 위의 막대로 보여 준다. 부제·버튼 막대를 끌거나 좌우 화살표로 옮겨 겹침을 바꾸면 즉시 재생된다. 스크러버로 시간을 앞뒤로 긁어 보고, 「되감기」로 전체를 거꾸로 재생한다.
 - **요청 예문**: "GSAP Timeline으로 제목 → 부제(0.15초 겹침) → 버튼 순서, 전체를 한 번에 되감기 가능하게."
 - **구현**: `gsap.timeline()`, 위치 파라미터(`"-=0.15"`, `"<"`), `tl.reverse()`
 - **관계**: `AGENTS.md` 모션 어휘 2번 "전환 순서와 겹침"이 이것이다. Stagger는 Timeline의 특수한 경우(같은 간격)다. 영상 편집의 타임라인과 같은 개념이다
@@ -156,9 +156,9 @@
 
 ### Marquee
 - **무엇**: 로고나 문구가 띠처럼 옆으로 끝없이 흐른다. 고객사 로고, 짧은 후기처럼 좁은 공간에 많이 보여 줄 때 쓴다.
-- **데모**: 고객사 로고 띠. hover나 focus에서 멈춘다. 일시정지 버튼도 있다.
+- **데모**: 고객사 로고 띠. 처음에는 멈춰 있고 "재생 / 일시정지" 토글로 흐른다. 재생 중에도 hover나 focus에서 멈춘다.
 - **요청 예문**: "고객사 로고를 끝없는 Marquee로, 마우스를 올리면 정지."
-- **구현**: 목록을 두 번 이어 붙이고 `@keyframes`로 `translateX(-50%)`, `animation-play-state: paused`. 복제한 목록은 `aria-hidden`. 자동으로 계속 움직이므로 정지 수단이 필수다(WCAG 2.2.2)
+- **구현**: 목록을 두 번 이어 붙이고 GSAP `xPercent: -50` + `repeat: -1`(CSS만 쓰면 `@keyframes` `translateX(-50%)` + `animation-play-state: paused`). 복제한 목록은 `aria-hidden`. 계속 움직이므로 정지 수단이 필수다(WCAG 2.2.2)
 
 ### Motion Path
 - **무엇**: 직선이 아니라 미리 정한 **곡선 경로**를 따라 날아간다. 예: 상품 이미지가 호를 그리며 장바구니로 들어간다.
@@ -177,7 +177,7 @@
 - **Pin**: 스크롤하는 동안 영역을 *고정*한다.
 - **Scroll Snap**: 스크롤을 멈춘 *위치를 정렬*한다.
 
-이 넷을 한 화면에서 비교하는 **비교 데모**를 범주 맨 위에 둔다.
+이 네 카드는 범주 앞쪽에 나란히 배치해 비교한다. 별도 비교 블록은 두지 않는다.
 
 ### Scroll Reveal *(UI에서 이동)*
 - **무엇**: 스크롤하다 요소가 화면(viewport)에 들어오면 자연스럽게 나타난다.
@@ -198,7 +198,7 @@
 - **무엇**: 스크롤하는데도 영역이 화면에 **고정**되어 있다. 정해진 구간이 지나면 풀린다.
 - **데모**: 내부 스크롤 영역. 고정이 시작되고 끝나는 경계를 표시한다(ScrollTrigger `markers`처럼). 고정된 동안 남은 거리를 보여 준다.
 - **요청 예문**: "이 섹션을 500px 스크롤하는 동안 Pin으로 화면에 고정."
-- **구현**: GSAP ScrollTrigger `pin: true`, CSS `position: sticky`(부모 높이로 고정 구간을 만든다)
+- **구현**: CSS `position: sticky`(부모 높이 = 고정 요소 높이 + 500px)로 고정하고, 내부 스크롤러에 건 GSAP ScrollTrigger로 경계와 남은 거리를 읽는다. 페이지 스크롤에서는 ScrollTrigger `pin: true`로도 만든다
 - **이 저장소의 예**: `src/connection-pool/Scrolly.tsx:158`. 다이어그램을 `sticky top-0`으로 고정한다
 - **관계**: Sticky Header와 비교. Pin은 *구간 동안만* 고정된다. 키보드 사용자가 고정 영역에 갇히지 않게 한다(`AGENTS.md` 사용성 기준)
 
@@ -227,7 +227,7 @@
 - **무엇**: 마우스 휠은 아래로 굴리는데 화면은 옆으로 넘어간다. 섹션을 Pin으로 고정하고, 세로 스크롤 양만큼 안쪽 내용을 가로로 민다.
 - **데모**: 프로젝트 카드 5장. 세로 스크롤에 따라 가로로 이동한다. "모바일" 토글을 켜면 세로 목록으로 바뀐다.
 - **요청 예문**: "프로젝트 섹션을 Pinned Horizontal Scroll로: 세로 스크롤에 카드가 가로로 이동, 모바일은 세로 목록."
-- **구현**: ScrollTrigger `pin` + `scrub` + `x: -(trackWidth - viewportWidth)`, 모바일은 `gsap.matchMedia()`로 분기
+- **구현**: CSS `position: sticky`로 고정 + GSAP ScrollTrigger `scrub` + `x: -(trackWidth - viewportWidth)`. 데모는 「모바일」 토글로 세로 목록을 보여 주고, 실제 페이지에서는 `gsap.matchMedia()`로 분기한다(페이지 스크롤이면 ScrollTrigger `pin: true`도 가능)
 - **관계**: Pin + Scroll Scrub의 응용. Carousel과 비교(입력 축이 다르다)
 
 ---
@@ -238,14 +238,14 @@
 - **무엇**: 링크를 눌렀을 때 화면이 갑자기 바뀌지 않고, 덮였다가 새 페이지가 나타난다. 앞에서 본 Fade·Slide를 페이지 전체에 적용한 것이다. 화면을 쓸고 지나가면 **Wipe**다.
 - **데모**: 미니 2페이지 앱. fade / slide-up / wipe를 고를 수 있다. 카드 안에서 페이지 이동을 흉내 낸다.
 - **요청 예문**: "페이지 이동 시 Page Transition: 0.3초 Fade Out 후 새 페이지가 아래에서 살짝 올라오게."
-- **구현**: View Transitions API(`document.startViewTransition()`, 다중 페이지는 `@view-transition`), `::view-transition-old`/`new`
+- **구현**: 카드 데모는 GSAP timeline으로 이전·새 화면을 겹쳐 바꾼다. 실제 페이지 전환은 View Transitions API(`document.startViewTransition()`, 다중 페이지는 `@view-transition`), `::view-transition-old`/`new`
 - **관계**: Wipe = 변형. View Transitions = 구현 API. 영상 편집의 wipe와는 대상이 다르다(Edit 섹션에서 비교)
 
 ### Shared Element Transition
 - **무엇**: 목록의 카드를 누르면 그 카드가 커져서 상세 화면이 된다. 두 화면이 **같은 요소를 공유**해서, 누른 것이 어디로 갔는지 놓치지 않는다.
 - **데모**: 상품 카드 3장. 누르면 이미지가 상세 화면 위치로 커진다. 그냥 Page Transition일 때와 비교한다.
 - **요청 예문**: "상품 카드를 누르면 카드 이미지가 상세 페이지 이미지로 이어지는 Shared Element Transition."
-- **구현**: View Transitions API + `view-transition-name`, 또는 GSAP Flip plugin
+- **구현**: GSAP Flip plugin(`Flip.getState()` → `Flip.from()`), 또는 View Transitions API + `view-transition-name`
 - **관계**: View Transitions는 이것의 구현 API이고, 페이지 전체 전환에도 쓰인다. 영상 편집의 match cut과는 비유로만 연결한다(같은 요소 vs 닮은 다른 요소)
 - **출처**: [W3C View Transitions](https://www.w3.org/TR/css-view-transitions-1/)
 
@@ -274,6 +274,7 @@
 
 ### Confetti
 - **무엇**: 결제 완료 같은 축하의 순간에 색종이가 터진다. 매번 터지면 금방 의미가 없어지니, 가입이나 첫 결제처럼 드문 순간에 아껴 쓴다.
-- **데모**: "첫 결제 완료" 버튼을 누르면 상단에서 2초 동안 confetti가 터진다.- **요청 예문**: "첫 결제가 끝나면 화면 상단에서 2초간 Confetti."
+- **데모**: "첫 결제 완료" 버튼을 누르면 상단에서 2초 동안 confetti가 터진다.
+- **요청 예문**: "첫 결제가 끝나면 화면 상단에서 2초간 Confetti."
 - **구현**: SVG/DOM 입자 수십 개 + GSAP(무작위 `x`·`y`·`rotation`). 라이브러리는 `AGENTS.md` 허용 표 밖이라 직접 만든다
 - **관계**: 포인터가 아니라 *사건*이 시작 조건이다. 그래서 범주 이름이 "Pointer & Event"다

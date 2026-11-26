@@ -72,7 +72,7 @@
 | Scroll Scrub | `src/connection-pool/Scrolly.tsx:136` — `scrollTrigger: { scrub }` |
 | Pin | `src/connection-pool/Scrolly.tsx:158` — 다이어그램을 `sticky top-0`으로 고정 |
 | Scrollytelling | `src/connection-pool/Scrolly.tsx` 전체 — 스크롤에 따라 단계 카드가 바뀜 |
-| Easing | `src/connection-pool/sim.ts:40`, `:66` |
+| Easing | `src/connection-pool/Scrolly.tsx:27`, `:28` — `gsap.parseEase('power2.inOut')`, `gsap.parseEase('power2.out')` |
 
 대시보드에 적용되는 규칙(에세이 규칙의 예외, shadcn/ui 허용 범위, 대시보드 완성 기준)은 `AGENTS.md`의 「용어 대시보드」 절에 있다.
 

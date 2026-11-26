@@ -16,7 +16,9 @@ export default defineConfig({
     },
   },
   webServer: {
-    command: `pnpm dev --host 127.0.0.1 --port ${port} --strictPort`,
+    // --force: 새 import(GSAP plugin 등)가 없는 옛 optimizer cache로 시작하면 Vite가 test 도중
+    // 다시 최적화하며 페이지를 reload한다(504 Outdated Optimize Dep). 시작할 때 새로 만든다.
+    command: `pnpm dev --host 127.0.0.1 --port ${port} --strictPort --force`,
     url: `http://127.0.0.1:${port}/terms.html`,
     reuseExistingServer: !process.env.CI,
   },
