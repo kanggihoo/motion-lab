@@ -51,10 +51,17 @@
 | 스타일 | **Tailwind** | 이미 익숙함 |
 | 모션 | **GSAP + ScrollTrigger** | 스크럽·핀의 사실상 표준 |
 | 타입 | **TypeScript** | 이 프로젝트는 **상태 일관성이 핵심**이라 장면 상태를 타입으로 묶어두면 연속성 버그가 줄어든다 |
-| 배포 | **Vercel / Cloudflare Pages** | 정적이라 아무거나. 둘 다 무료 |
+| 배포 | **GitHub Pages** | `main`에 push하면 `.github/workflows/deploy.yml`이 build해서 올린다 (아래 「배포」) |
 | 테스트 | **Vitest + Playwright** | Vitest는 Vite 설정을 그대로 쓰는 단위 테스트, Playwright는 실제 브라우저에서 키보드 focus·역스크롤·새로고침 같은 연속성 기준을 확인한다 |
 
 > GSAP은 2024년 Webflow 인수 후 **기존 유료 플러그인까지 전부 무료**다. SplitText·MorphSVG·DrawSVG 등 포함.
+
+### 배포
+
+- 주소는 `https://kanggihoo.github.io/motion-lab/`다. 에세이는 `connection-pool/`, 용어 대시보드는 `terms.html`
+- 사이트가 `/motion-lab/` 아래에 놓인다. HTML의 링크와 redirect는 `./connection-pool/`처럼 **상대 경로**로 쓴다. `/`로 시작하는 `href`는 Vite가 바꿔 주지 않아 배포하면 404가 난다
+- 코드에서 이미지 같은 asset은 `import`해서 쓴다. 그래야 build할 때 base가 붙는다
+- base는 workflow의 `pnpm build --base=...`에서만 지정한다. `vite.config.ts`에 넣지 않는다 (`pnpm dev`와 Playwright는 `/` 기준이다)
 
 ### 렌더링 레이어 — SVG로 확정
 
@@ -103,7 +110,7 @@ ScrollTrigger { markers: true }  →  핀 경계 확인
 | 백엔드 일체 (스케줄러·큐·DB·로그인·수집 서버) | **AI는 제작 단계에서만 쓰고, 공개 사이트는 승인된 결과물을 정적으로 제공한다.** 방문자마다 생성하지 않으므로 런타임이 필요 없다 |
 | 범용 장면 엔진 / 장면 에디터 | 추상화는 **2회차에서 실제 중복이 확인될 때.** 1회차에서 하지 않는다 |
 | 시리즈 셸 / 에피소드 목록 / "다음 편 예정" | 항목 하나짜리 목록은 지속의 증거가 아니라 죽은 블로그로 읽힌다. **2회차가 실제로 공개될 때** 붙인다 |
-| CI, 스토리북 | 1인 주말 프로젝트다 |
+| CI, 스토리북 | 1인 주말 프로젝트다. GitHub Pages 배포 workflow(`deploy.yml`)만 예외이고, 여기에 test·lint 단계를 덧붙이지 않는다 |
 
 ## 모션 어휘 — 세 개만 (에세이)
 
