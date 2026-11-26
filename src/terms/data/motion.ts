@@ -3,10 +3,33 @@ import type { TermSection } from './types'
 export default {
   id: 'motion',
   name: 'Motion',
+  // 범주 순서는 docs/terms/motion.md와 같다. terms가 빈 범주는 data/index.ts가 화면에서 거른다.
   categories: [
+    {
+      id: 'basics',
+      name: 'Basics',
+      // 데모 파일: src/terms/demos/motion-basics.tsx
+      loadDemos: async () => ({}),
+      terms: [],
+    },
+    {
+      id: 'timing-sequence',
+      name: 'Timing & Sequence',
+      // 데모 파일: src/terms/demos/motion-timing.tsx
+      loadDemos: async () => ({}),
+      terms: [],
+    },
+    {
+      id: 'text-graphic',
+      name: 'Text & Graphic',
+      // 데모 파일: src/terms/demos/motion-text.tsx
+      loadDemos: async () => ({}),
+      terms: [],
+    },
     {
       id: 'scroll',
       name: 'Scroll',
+      // 데모 파일: src/terms/demos/motion-scroll.tsx
       loadDemos: async () => {
         const demo = await import('@terms/demos/motion-scroll')
         return {
@@ -26,6 +49,20 @@ export default {
           relations: [],
         },
       ],
+    },
+    {
+      id: 'transition',
+      name: 'Transition',
+      // 데모 파일: src/terms/demos/motion-transition.tsx
+      loadDemos: async () => ({}),
+      terms: [],
+    },
+    {
+      id: 'pointer-event',
+      name: 'Pointer & Event',
+      // 데모 파일: src/terms/demos/motion-pointer.tsx
+      loadDemos: async () => ({}),
+      terms: [],
     },
   ],
 } satisfies TermSection

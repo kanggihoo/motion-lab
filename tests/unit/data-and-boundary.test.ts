@@ -35,9 +35,9 @@ describe('Terms Dashboard data integrity & Look section', () => {
     const allIds = new Set(
       sections.flatMap((s) => s.categories.flatMap((c) => c.terms.map((t) => t.id))),
     )
-    expect(allIds.has('typewriter')).toBe(false)
-    expect(allIds.has('magnetic-button')).toBe(false)
-    expect(allIds.has('stagger')).toBe(false)
+    expect(allIds.has('interpolation')).toBe(false)
+    expect(allIds.has('orchestration')).toBe(false)
+    expect(allIds.has('rotate')).toBe(false)
   })
 
   it('has unique term IDs per section and matching loadDemos keys for every term', async () => {

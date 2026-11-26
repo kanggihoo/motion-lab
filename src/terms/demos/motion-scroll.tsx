@@ -1,7 +1,8 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import { useInnerScroller } from '@terms/hooks/use-inner-scroller'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -15,7 +16,6 @@ const SCRUB_OPTIONS: { value: ScrubOption; label: string }[] = [
 
 export function ScrollScrubDemo() {
   const rootRef = useRef<HTMLDivElement>(null)
-  const scrollerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const shapeRef = useRef<SVGGElement>(null)
   const fillRef = useRef<SVGRectElement>(null)
@@ -25,25 +25,17 @@ export function ScrollScrubDemo() {
   const [scrollPct, setScrollPct] = useState(0)
   const [animPct, setAnimPct] = useState(0)
 
-  useEffect(() => {
-    const scroller = scrollerRef.current
-    if (!scroller) return
-
-    const syncScroll = () => {
-      const max = scroller.scrollHeight - scroller.clientHeight
-      const ratio = max > 0 ? Math.min(1, Math.max(0, scroller.scrollTop / max)) : 0
+  const { scrollerRef, scrollerProps } = useInnerScroller({
+    label: 'Scroll Scrub 내부 스크롤 영역',
+    onScroll: (ratio) => {
       setScrollPct(Math.round(ratio * 100))
       if (markerRef.current) {
         const x = String(32 + ratio * 256)
         markerRef.current.setAttribute('x1', x)
         markerRef.current.setAttribute('x2', x)
       }
-    }
-
-    syncScroll()
-    scroller.addEventListener('scroll', syncScroll, { passive: true })
-    return () => scroller.removeEventListener('scroll', syncScroll)
-  }, [])
+    },
+  })
 
   useGSAP(
     () => {
@@ -95,14 +87,8 @@ export function ScrollScrubDemo() {
         </fieldset>
       </div>
 
-      {/* D-8, D-12 #3: 내부 스크롤러. tabIndex=0으로 키보드 스크롤 가능하며 Tab으로 바로 빠져나간다 */}
-      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 스크롤 가능한 내부 영역의 키보드 접근성 */}
-      <section
-        ref={scrollerRef}
-        tabIndex={0}
-        aria-label="Scroll Scrub 내부 스크롤 영역"
-        className="h-56 overflow-y-auto overscroll-contain rounded-lg border border-slate-200 bg-white focus-visible:outline-2 focus-visible:outline-indigo-700"
-      >
+      {/* D-8, D-12 #3: 내부 스크롤러. 키보드로 스크롤할 수 있고 Tab으로 바로 빠져나간다 */}
+      <section {...scrollerProps} className={`h-56 ${scrollerProps.className}`}>
         <div ref={trackRef} className="relative h-[540px]">
           <div className="sticky top-0 flex h-56 flex-col justify-between p-3">
             <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
