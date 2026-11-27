@@ -24,17 +24,17 @@ Decisions: [decisions.md](decisions.md) · Glossary and ADRs: [GLOSSARY.md](../.
 
 ## Acceptance criteria
 
-- [ ] AC-1: `Look` 섹션의 `Color & Light` 4장(`Color Grading`, `Selective Color`, `Day for Night`, `Volumetric Light`)과 `Texture & Frame` 3장(`Film Grain`, `Letterbox`, `Vignette`) 총 7장이 등록·노출되고, 각 카드에 `촬영·편집`과 `웹 데모 구현`이 구분 표시되며, 데모가 없는 나머지 75장은 화면·검색·관계 링크에 나타나지 않는다 (D-1, D-2, D-3, D-10).
-- [ ] AC-2: 신규 Look 6장은 모두 `LookStage` 전/후 분할 비교(슬라이더 `0~100%`, `전`/`후` 텍스트 표식, 재생 버튼 및 속도 슬라이더 없음) 안에서 카드별 컨트롤을 제공한다 — `Color Grading`(`원본` 선택 시 `splitPercent = 100`으로 원본 100% 표시, `Teal & Orange / 차가운 블루 / 따뜻한 필름` 선택 시 `후` 영역에 해당 색보정 적용), `Day for Night`(`1. 전체 어둡게 / 2. 푸른 톤 / 3. 하늘 어둡게` 3단계 체크박스), `Volumetric Light`(`안개/먼지 농도` 슬라이더), `Film Grain`(`강도` 슬라이더, 자동 재생 없는 정적 그레인 패턴), `Letterbox`(`16:9 (표준) / 1.85:1 / 2.39:1 (Letterbox)` 버튼, `전`은 16:9 원본이고 `후` 영역에 선택한 화면비 검은 띠 적용), `Vignette`(`강도(Amount)`·`부드러움(Feather)` 슬라이더) (D-4, D-9, D-15).
-- [ ] AC-3: `SharedScene`과 `TIME_PALETTES`에 원경 불빛을 포함한 `night` 시간대가 추가되고(`ViewportCanvas`의 `night` 자리 표시 색상 포함), Look 7장 모두 `three` + `@react-three/fiber`(`@react-three/drei` 미사용) 기반 공유 장면으로 렌더링되며, `docs/terms/look.md`의 신규 6장 `데모`·`요청 예문`·`웹 데모` 구현 줄이 3D 공유 장면·`LookStage` 기준으로 갱신된다(`무엇`·`관계` 및 출처 유무는 유지) (D-5, D-6).
-- [ ] AC-4: 모든 3D 카드(Look 7장·Camera 1장·Edit 1장)는 카드당 `<canvas>`를 최대 1개만 유지하고, viewport에서 멀어지면 canvas를 해제해 자리 표시를 보이며, `webglcontextlost` 발생 시 검은 화면 대신 복구 안내와 재시도 버튼을 표시한다 (D-7, D-12).
-- [ ] AC-5: 활성 범주(`Motion · Scroll`, `Camera · Movement`, `Edit · Transition`, `Look · Color & Light`, `Look · Texture & Frame`)를 열었을 때 사용자 조작 전에는 어떤 데모도 자동 재생되지 않으며, 기존 대표 카드 4장의 컨트롤(`Scroll Scrub` scrub `0/0.5/2`, `Dolly Zoom` 방향 토글, `Dissolve` 겹침 `0.3s/1.0s/2.0s`, `Selective Color` 모드 토글)이 정상 동작한다 (D-12, D-15).
-- [ ] AC-6: `ScrollScrubDemo`, `DollyZoomDemo`, `DissolveDemo`에서 인터랙션·재생 후 언마운트하거나 다른 섹션·범주로 전환하면 남아 있는 `ScrollTrigger`와 활성 GSAP tween이 0개이며 콘솔 오류가 발생하지 않는다 (D-8, D-12).
-- [ ] AC-7: 키보드 `Tab`으로 `Motion · Scroll`의 `Scroll Scrub` 내부 스크롤 영역에 진입해 화살표 키로 스크롤한 뒤 다시 `Tab`을 누르면 영역 안에 갇히지 않고 다음 포커스 가능 요소로 이동한다 (D-8, D-12).
-- [ ] AC-8: 기존 `#ui/...`·`#style/...` hash 주소로 직접 진입하거나 이동할 때 해당 카드가 표시되며, 헤더의 `Reduced Motion 미리보기` 토글은 UI·Style 카드의 기존 동작을 유지하고 Motion·Camera·Edit·Look 데모는 해당 토글과 `prefers-reduced-motion`에 반응하지 않는다 (D-2, D-10, D-11, D-12).
-- [ ] AC-9: `src/connection-pool/`의 어떤 파일도 `src/terms/`나 `three`/`@react-three/fiber`를 import하지 않으며, 등록된 모든 섹션·범주의 카드마다 대응하는 `loadDemos` 키가 존재하고 섹션 내 카드 ID 중복이 없으며, 순수 계산(`toLuminanceHex`, `pickColor`, `TIME_PALETTES.night`, 광학/타임라인 계산)이 기대값을 만족한다 (D-5, D-6, D-10, D-12, D-13).
-- [ ] AC-10: `pnpm test`(Vitest), `pnpm test:e2e`(Playwright, 스크린샷·시각 비교 없음), `pnpm check`, `pnpm build`, `pnpm lint`가 모두 종료 코드 0으로 통과한다 (D-13).
-- [ ] AC-11: 사용자가 개발 서버(`/terms.html`)에서 Look 7장 및 기존 대표 카드들의 3D 공유 장면·전/후 분할 비교·컨트롤을 직접 확인해 시각적·구조적 결함이 없음을 확인한다 (D-1, D-4, D-5, D-13).
+- [x] AC-1: `Look` 섹션의 `Color & Light` 4장(`Color Grading`, `Selective Color`, `Day for Night`, `Volumetric Light`)과 `Texture & Frame` 3장(`Film Grain`, `Letterbox`, `Vignette`) 총 7장이 등록·노출되고, 각 카드에 `촬영·편집`과 `웹 데모 구현`이 구분 표시되며, 데모가 없는 나머지 75장은 화면·검색·관계 링크에 나타나지 않는다 (D-1, D-2, D-3, D-10).
+- [x] AC-2: 신규 Look 6장은 모두 `LookStage` 전/후 분할 비교(슬라이더 `0~100%`, `전`/`후` 텍스트 표식, 재생 버튼 및 속도 슬라이더 없음) 안에서 카드별 컨트롤을 제공한다 — `Color Grading`(`원본` 선택 시 `splitPercent = 100`으로 원본 100% 표시, `Teal & Orange / 차가운 블루 / 따뜻한 필름` 선택 시 `후` 영역에 해당 색보정 적용), `Day for Night`(`1. 전체 어둡게 / 2. 푸른 톤 / 3. 하늘 어둡게` 3단계 체크박스), `Volumetric Light`(`안개/먼지 농도` 슬라이더), `Film Grain`(`강도` 슬라이더, 자동 재생 없는 정적 그레인 패턴), `Letterbox`(`16:9 (표준) / 1.85:1 / 2.39:1 (Letterbox)` 버튼, `전`은 16:9 원본이고 `후` 영역에 선택한 화면비 검은 띠 적용), `Vignette`(`강도(Amount)`·`부드러움(Feather)` 슬라이더) (D-4, D-9, D-15).
+- [x] AC-3: `SharedScene`과 `TIME_PALETTES`에 원경 불빛을 포함한 `night` 시간대가 추가되고(`ViewportCanvas`의 `night` 자리 표시 색상 포함), Look 7장 모두 `three` + `@react-three/fiber`(`@react-three/drei` 미사용) 기반 공유 장면으로 렌더링되며, `docs/terms/look.md`의 신규 6장 `데모`·`요청 예문`·`웹 데모` 구현 줄이 3D 공유 장면·`LookStage` 기준으로 갱신된다(`무엇`·`관계` 및 출처 유무는 유지) (D-5, D-6).
+- [x] AC-4: 모든 3D 카드(Look 7장·Camera 1장·Edit 1장)는 카드당 `<canvas>`를 최대 1개만 유지하고, viewport에서 멀어지면 canvas를 해제해 자리 표시를 보이며, `webglcontextlost` 발생 시 검은 화면 대신 복구 안내와 재시도 버튼을 표시한다 (D-7, D-12).
+- [x] AC-5: 활성 범주(`Motion · Scroll`, `Camera · Movement`, `Edit · Transition`, `Look · Color & Light`, `Look · Texture & Frame`)를 열었을 때 사용자 조작 전에는 어떤 데모도 자동 재생되지 않으며, 기존 대표 카드 4장의 컨트롤(`Scroll Scrub` scrub `0/0.5/2`, `Dolly Zoom` 방향 토글, `Dissolve` 겹침 `0.3s/1.0s/2.0s`, `Selective Color` 모드 토글)이 정상 동작한다 (D-12, D-15).
+- [x] AC-6: `ScrollScrubDemo`, `DollyZoomDemo`, `DissolveDemo`에서 인터랙션·재생 후 언마운트하거나 다른 섹션·범주로 전환하면 남아 있는 `ScrollTrigger`와 활성 GSAP tween이 0개이며 콘솔 오류가 발생하지 않는다 (D-8, D-12).
+- [x] AC-7: 키보드 `Tab`으로 `Motion · Scroll`의 `Scroll Scrub` 내부 스크롤 영역에 진입해 화살표 키로 스크롤한 뒤 다시 `Tab`을 누르면 영역 안에 갇히지 않고 다음 포커스 가능 요소로 이동한다 (D-8, D-12).
+- [x] AC-8: 기존 `#ui/...`·`#style/...` hash 주소로 직접 진입하거나 이동할 때 해당 카드가 표시되며, 헤더의 `Reduced Motion 미리보기` 토글은 UI·Style 카드의 기존 동작을 유지하고 Motion·Camera·Edit·Look 데모는 해당 토글과 `prefers-reduced-motion`에 반응하지 않는다 (D-2, D-10, D-11, D-12).
+- [x] AC-9: `src/connection-pool/`의 어떤 파일도 `src/terms/`나 `three`/`@react-three/fiber`를 import하지 않으며, 등록된 모든 섹션·범주의 카드마다 대응하는 `loadDemos` 키가 존재하고 섹션 내 카드 ID 중복이 없으며, 순수 계산(`toLuminanceHex`, `pickColor`, `TIME_PALETTES.night`, 광학/타임라인 계산)이 기대값을 만족한다 (D-5, D-6, D-10, D-12, D-13).
+- [x] AC-10: `pnpm test`(Vitest), `pnpm test:e2e`(Playwright, 스크린샷·시각 비교 없음), `pnpm check`, `pnpm build`, `pnpm lint`가 모두 종료 코드 0으로 통과한다 (D-13).
+- [x] AC-11: 사용자가 개발 서버(`/terms.html`)에서 Look 7장 및 기존 대표 카드들의 3D 공유 장면·전/후 분할 비교·컨트롤을 직접 확인해 시각적·구조적 결함이 없음을 확인한다 (D-1, D-4, D-5, D-13).
 
 ## Interfaces
 
